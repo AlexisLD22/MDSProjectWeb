@@ -28,11 +28,15 @@ if (isset($_POST['login'])) {
 
     if ($result->num_rows === 1) {
         // Login successful
-        header("Location: index.html");
+        session_start(); // Start a new session or resume the existing session
+        $_SESSION['is_logged_in'] = true; // Set a session variable to indicate login
+        header("Location: index.php"); // Redirect to the index.php page
+        exit();
     } else {
         // Login failed
         $error_message = "Login failed. Please check your email and password.";
     }
+    
 
     // Close the database connection
     $conn->close();
