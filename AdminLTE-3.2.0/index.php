@@ -52,7 +52,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.php" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
@@ -188,7 +188,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
+    <a href="index.php" class="brand-link">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
@@ -223,33 +223,33 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li>
-            <a href="./index.html" class="nav-link active">
+            <a href="./index.php" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <!--Forms-->
-          <a href="pages/forms/general.html" class="nav-link">
+          <a href="pages/forms/general.php" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
             <p>General Elements</p>
           </a>
           <!--DataTable-->
-          <a href="pages/tables/data.html" class="nav-link">
+          <a href="pages/tables/data.php" class="nav-link">
             <i class="nav-icon fas fa-table"></i>
             <p>DataTables</p>
           </a>
-          <a href="pages/calendar.html" class="nav-link">
+          <a href="pages/calendar.php" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Calendar
                 <span class="badge badge-info right">2</span>
               </p>
             </a>
-            <a href="pages/examples/projects.html" class="nav-link">
+            <a href="pages/examples/projects.php" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>Projects</p>
             </a>
-            <a href="pages/charts/chartjs.html" class="nav-link">
+            <a href="pages/charts/chartjs.php" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>Charts</p>
             </a>
@@ -275,7 +275,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
