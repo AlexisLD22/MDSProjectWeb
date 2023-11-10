@@ -1,3 +1,59 @@
+<?php
+// Check de la connexion de l'utilisateur
+    session_start();
+
+    // Check if the user is not logged in
+    if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+        header("Location: ../../login.php");
+        exit();
+    }
+
+$serveur = "localhost"; // Remplacez localhost par l'adresse de votre serveur
+$username = "root"; // Remplacez par votre nom d'utilisateur
+$password = "root"; // Remplacez par votre mot de passe
+$database = "toiletagecanin"; // Remplacez par le nom de votre base de données
+
+// Connexion à la base de données
+$conn = new mysqli($serveur, $username, $password, $database);
+
+// Vérifier la connexion
+if ($conn->connect_error) {
+    die("La connexion a échoué : " . $conn->connect_error);
+}
+
+// Requête for Chart Doughnut breed     : Req_Doughnut
+// Requête pour Diagramme Taille        : Req_Bar_Taille
+// Requêtre pour Diagramme Capabilities : Req_Line
+// Requête pour Diagramme Poids         : Req_Bar_Poids
+
+$Req_Doughnut = mysqli_query($conn,"SELECT breed, COUNT(*) as count FROM animals GROUP BY breed;");
+$Req_Bar_Taille = mysqli_query($conn,"SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;");
+$Req_Line = mysqli_query($conn,"SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;");
+$Req_Bar_Poids = mysqli_query($conn,"SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;");
+
+// Affecte des données pour le Chart Doughnut
+foreach($Req_Doughnut as $data){
+    $Doughnut_count[] = $data['count'];
+    $Doughnut_breed[] = $data['breed'];
+}
+// Affecte Donnée de la requête pour Diagramme Taille
+foreach($Req_Bar_Taille as $data){
+    $Bar_Type_height[] = $data['type_height'];
+    $Bar_Height_count[] = $data['count'];
+}
+// Affecte Donnée de la requête pour Diagramme Capabilities
+foreach($Req_Line as $data){
+  $Line_name[]= $data['name'];
+  $Line_count[] = $data['count'];
+}
+// affecte Donnée de la requête pour Diagramme Poids
+foreach($Req_Bar_Poids as $data){
+  $Bar_Type_Weight[] = $data['type_weight'];
+  $Bar_Weight_count[] = $data['count'];
+}
+// Fermer la connexion
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,23 +253,23 @@
             </a>
           </li>
           <!--Forms-->
-          <a href="../forms/general.php" class="nav-link">
+          <a href="../forms/general.html" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
             <p>General Elements</p>
           </a>
           <!--DataTable-->
-          <a href="../tables/data.php" class="nav-link">
+          <a href="../tables/data.html" class="nav-link">
             <i class="nav-icon fas fa-table"></i>
             <p>DataTables</p>
           </a>
-          <a href="../calendar.php" class="nav-link">
+          <a href="../calendar.html" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Calendar
                 <span class="badge badge-info right">2</span>
               </p>
             </a>
-            <a href="../examples/projects.php" class="nav-link">
+            <a href="../examples/projects.html" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>Projects</p>
             </a>
@@ -243,31 +299,39 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">ChartJS</li>
             </ol>
           </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
-
-    <!-- Main content -->
+  
     <section class="content">
       <div class="container-fluid">
         <div class="row">
+          <!-- Colonne Droite -->
           <div class="col-md-6">
-            <!-- AREA CHART -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Area Chart</h3>
 
+            <!-- Diagramme Breed -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Diagramme Race</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagramme Taille -->
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Diagramme de taille</h3>
+                <div class="card-tools">
                 </div>
               </div>
               <div class="card-body">
@@ -275,67 +339,17 @@
                   <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
               </div>
-              <!-- /.card-body -->
             </div>
             <!-- /.card -->
-
-            <!-- DONUT CHART -->
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Donut Chart</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-            <!-- PIE CHART -->
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Pie Chart</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
           </div>
-          <!-- /.col (LEFT) -->
+          <!-- Colonne Gauche -->
           <div class="col-md-6">
-            <!-- LINE CHART -->
+
+            <!-- Diagramme Service-->
             <div class="card card-info">
               <div class="card-header">
-                <h3 class="card-title">Line Chart</h3>
-
+                <h3 class="card-title">Diagramme des formationes</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
                 </div>
               </div>
               <div class="card-body">
@@ -347,18 +361,11 @@
             </div>
             <!-- /.card -->
 
-            <!-- BAR CHART -->
+            <!-- Diagramme Weight-->
             <div class="card card-success">
               <div class="card-header">
-                <h3 class="card-title">Bar Chart</h3>
-
+                <h3 class="card-title">Diagramme de poids</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
                 </div>
               </div>
               <div class="card-body">
@@ -366,251 +373,131 @@
                   <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-
-            <!-- STACKED BAR CHART -->
-            <div class="card card-success">
-              <div class="card-header">
-                <h3 class="card-title">Stacked Bar Chart</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="chart">
-                  <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
           </div>
-          <!-- /.col (RIGHT) -->
         </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.2.0
-    </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Add Content Here -->
-  </aside>
-  <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
 <script src="../../plugins/chart.js/Chart.min.js"></script>
-<!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
-<!-- Page specific script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!--------------------------------------------------------------------------------------------------->
+<!-------------------------------------- SCRIPT DIAGRAMME RACE -------------------------------------->
+<!--------------------------------------------------------------------------------------------------->
 <script>
-  $(function () {
-    /* ChartJS
-     * -------
-     * Here we will create a few charts using ChartJS
-     */
-
-    //--------------
-    //- AREA CHART -
-    //--------------
-
-    // Get context with jQuery - using jQuery's .get() method.
-    var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
-
-    var areaChartData = {
-      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label               : 'Digital Goods',
-          backgroundColor     : 'rgba(60,141,188,0.9)',
-          borderColor         : 'rgba(60,141,188,0.8)',
-          pointRadius          : false,
-          pointColor          : '#3b8bba',
-          pointStrokeColor    : 'rgba(60,141,188,1)',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(60,141,188,1)',
-          data                : [28, 48, 40, 19, 86, 27, 90]
+    new Chart(document.getElementById('donutChart'),{
+            type: 'doughnut',
+            data:{
+                labels: <?php echo json_encode($Doughnut_breed)?>,
+                datasets: [{
+                label:'Quantité',
+                data: <?php echo json_encode($Doughnut_count)?>,
+                backgroundColor: [
+                    'rgb(255, 99, 132)', 
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(255, 40, 200'
+                    ],
+                hoverOffset: 4
+                }]
+            },
+        });
+</script>
+<!--------------------------------------------------------------------------------------------------->
+<!-------------------------------------- SCRIPT DIAGRAMME TAILLE ------------------------------------>
+<!--------------------------------------------------------------------------------------------------->
+<script>
+    new Chart(document.getElementById('areaChart'), {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($Bar_Type_height)?>,
+            datasets: [{
+                label: ['Résumé taille'],
+                data: <?php echo json_encode($Bar_Height_count)?>,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(153, 102, 255)'
+                ],
+                borderWidth: 1
+            }]
         },
-        {
-          label               : 'Electronics',
-          backgroundColor     : 'rgba(210, 214, 222, 1)',
-          borderColor         : 'rgba(210, 214, 222, 1)',
-          pointRadius         : false,
-          pointColor          : 'rgba(210, 214, 222, 1)',
-          pointStrokeColor    : '#c1c7d1',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data                : [65, 59, 80, 81, 56, 55, 40]
-        },
-      ]
-    }
-
-    var areaChartOptions = {
-      maintainAspectRatio : false,
-      responsive : true,
-      legend: {
-        display: false
-      },
-      scales: {
-        xAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }],
-        yAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }]
-      }
-    }
-
-    // This will get the first returned node in the jQuery collection.
-    new Chart(areaChartCanvas, {
-      type: 'line',
-      data: areaChartData,
-      options: areaChartOptions
-    })
-
-    //-------------
-    //- LINE CHART -
-    //--------------
-    var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
-    var lineChartOptions = $.extend(true, {}, areaChartOptions)
-    var lineChartData = $.extend(true, {}, areaChartData)
-    lineChartData.datasets[0].fill = false;
-    lineChartData.datasets[1].fill = false;
-    lineChartOptions.datasetFill = false
-
-    var lineChart = new Chart(lineChartCanvas, {
-      type: 'line',
-      data: lineChartData,
-      options: lineChartOptions
-    })
-
-    //-------------
-    //- DONUT CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-    var donutData        = {
-      labels: [
-          'Chrome',
-          'IE',
-          'FireFox',
-          'Safari',
-          'Opera',
-          'Navigator',
-      ],
-      datasets: [
-        {
-          data: [700,500,400,600,300,100],
-          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true
+                } 
+            }
         }
-      ]
-    }
-    var donutOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: donutData,
-      options: donutOptions
-    })
-
-    //-------------
-    //- PIE CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-    var pieData        = donutData;
-    var pieOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(pieChartCanvas, {
-      type: 'pie',
-      data: pieData,
-      options: pieOptions
-    })
-
-    //-------------
-    //- BAR CHART -
-    //-------------
-    var barChartCanvas = $('#barChart').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    barChartData.datasets[0] = temp1
-    barChartData.datasets[1] = temp0
-
-    var barChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      datasetFill             : false
-    }
-
-    new Chart(barChartCanvas, {
-      type: 'bar',
-      data: barChartData,
-      options: barChartOptions
-    })
-
-    //---------------------
-    //- STACKED BAR CHART -
-    //---------------------
-    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-    var stackedBarChartData = $.extend(true, {}, barChartData)
-
-    var stackedBarChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
-        }]
-      }
-    }
-
-    new Chart(stackedBarChartCanvas, {
-      type: 'bar',
-      data: stackedBarChartData,
-      options: stackedBarChartOptions
-    })
-  })
+    });
+</script>
+<!--------------------------------------------------------------------------------------------------->
+<!----------------------------------- SCRIPT DIAGRAMME CAPABILITIES --------------------------------->
+<!--------------------------------------------------------------------------------------------------->
+<script>
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($Line_name)?>,
+            datasets: [{
+                label: "Nombre d'employés formés pour ce service",
+                data: <?php echo json_encode($Line_count)?>,
+                borderWidth: 1
+            }]
+        },
+        options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+        }
+    });
+</script>
+<!--------------------------------------------------------------------------------------------------->
+<!-------------------------------------- SCRIPT DIAGRAMME POIDS ------------------------------------->
+<!--------------------------------------------------------------------------------------------------->
+<script>
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($Bar_Type_Weight)?>,
+            datasets: [{
+                label: ['Résumé Poids'],
+                data: <?php echo json_encode($Bar_Weight_count)?>,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(153, 102, 255)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            } 
+        }
+        }
+    });
 </script>
 </body>
 </html>
