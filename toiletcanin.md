@@ -48,7 +48,7 @@ CREATE TABLE animals
     age INT,
     weight INT,
     height INT,
-    comment LONGTEXT,
+    commentary LONGTEXT,
     customer_id int,
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
@@ -80,12 +80,12 @@ CREATE TABLE capabilities
 
 
 INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES
-("Emily", "Johnson", "emily.johnson@example.com", "1024665457", "14 rue des fleurs", ""),
-("Daniel", "Wilson", "daniel.wilson@example.com", "0245876954", "456 Elm Avenue, Another City, USA", ""),
-("Olivia", "Smith", "olivia.smith@example.com", "0354876152", "789 Oak Road, Somewhere, USA", ""),
-("Samuel", "Taylor", "samuel.taylor@example.com", "0345812654", "567 Pine Lane, Anyville, USA", "");
+("Emily", "Johnson", "emily.johnson@example.com", "0524665457", "14 rue des fleurs", ""),
+("Daniel", "Wilson", "daniel.wilson@example.com", "0245876954", "456 Elm Avenue", ""),
+("Olivia", "Smith", "olivia.smith@example.com", "0354876152", "789 Oak Road", ""),
+("Samuel", "Taylor", "samuel.taylor@example.com", "0345812654", "567 Pine Lane", "");
 
-INSERT INTO animals (name, breed, age, weight, height, comment, customer_id) VALUES
+INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES
 ("Isla", "Labrador Retriever", 5, 60, 152, "/", "1"),
 ("Milo", "German Shepherd", 4, 57, 150, "Cute dog", "2"),
 ("Aurora", "Golden Retriever", 8, 45, 100, "/", "3"),

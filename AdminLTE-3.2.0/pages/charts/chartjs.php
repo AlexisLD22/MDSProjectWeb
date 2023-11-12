@@ -1,58 +1,62 @@
 <?php
 // Check de la connexion de l'utilisateur
-    session_start();
+  session_start();
 
-    // Check if the user is not logged in
-    if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-        header("Location: ../../login.php");
-        exit();
-    }
+  // Check if the user is not logged in
+  if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+      header("Location: ../../login.php");
+      exit();
+  }
 
-$serveur = "localhost"; // Remplacez localhost par l'adresse de votre serveur
-$username = "root"; // Remplacez par votre nom d'utilisateur
-$password = "root"; // Remplacez par votre mot de passe
-$database = "toiletagecanin"; // Remplacez par le nom de votre base de données
+  $serveur = "localhost"; // Remplacez localhost par l'adresse de votre serveur
+  $username = "root"; // Remplacez par votre nom d'utilisateur
+  $password = "root"; // Remplacez par votre mot de passe
+  $database = "toiletagecanin"; // Remplacez par le nom de votre base de données
 
-// Connexion à la base de données
-$conn = new mysqli($serveur, $username, $password, $database);
+  // Connexion à la base de données
+  $conn = new mysqli($serveur, $username, $password, $database);
 
-// Vérifier la connexion
-if ($conn->connect_error) {
-    die("La connexion a échoué : " . $conn->connect_error);
-}
+  // Vérifier la connexion
+  if ($conn->connect_error) {
+      die("La connexion a échoué : " . $conn->connect_error);
+  }
 
-// Requête for Chart Doughnut breed     : Req_Doughnut
-// Requête pour Diagramme Taille        : Req_Bar_Taille
-// Requêtre pour Diagramme Capabilities : Req_Line
-// Requête pour Diagramme Poids         : Req_Bar_Poids
+  // Requête for Chart Doughnut breed     : Req_Doughnut
+  // Requête pour Diagramme Taille        : Req_Bar_Taille
+  // Requêtre pour Diagramme Capabilities : Req_Line
+  // Requête pour Diagramme Poids         : Req_Bar_Poids
 
-$Req_Doughnut = mysqli_query($conn,"SELECT breed, COUNT(*) as count FROM animals GROUP BY breed;");
-$Req_Bar_Taille = mysqli_query($conn,"SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;");
-$Req_Line = mysqli_query($conn,"SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;");
-$Req_Bar_Poids = mysqli_query($conn,"SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;");
+  $Req_Doughnut = mysqli_query($conn,"SELECT breed, COUNT(*) as count FROM animals GROUP BY breed;");
+  $Req_Bar_Taille = mysqli_query($conn,"SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;");
+  $Req_Line = mysqli_query($conn,"SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;");
+  $Req_Bar_Poids = mysqli_query($conn,"SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;");
 
-// Affecte des données pour le Chart Doughnut
-foreach($Req_Doughnut as $data){
-    $Doughnut_count[] = $data['count'];
-    $Doughnut_breed[] = $data['breed'];
-}
-// Affecte Donnée de la requête pour Diagramme Taille
-foreach($Req_Bar_Taille as $data){
-    $Bar_Type_height[] = $data['type_height'];
-    $Bar_Height_count[] = $data['count'];
-}
-// Affecte Donnée de la requête pour Diagramme Capabilities
-foreach($Req_Line as $data){
-  $Line_name[]= $data['name'];
-  $Line_count[] = $data['count'];
-}
-// affecte Donnée de la requête pour Diagramme Poids
-foreach($Req_Bar_Poids as $data){
-  $Bar_Type_Weight[] = $data['type_weight'];
-  $Bar_Weight_count[] = $data['count'];
-}
-// Fermer la connexion
-$conn->close();
+  // Affecte des données pour le Chart Doughnut
+  foreach($Req_Doughnut as $data){
+      $Doughnut_count[] = $data['count'];
+      $Doughnut_breed[] = $data['breed'];
+  }
+
+  // Affecte Donnée de la requête pour Diagramme Taille
+  foreach($Req_Bar_Taille as $data){
+      $Bar_Type_height[] = $data['type_height'];
+      $Bar_Height_count[] = $data['count'];
+  }
+
+  // Affecte Donnée de la requête pour Diagramme Capabilities
+  foreach($Req_Line as $data){
+    $Line_name[]= $data['name'];
+    $Line_count[] = $data['count'];
+  }
+
+  // affecte Donnée de la requête pour Diagramme Poids
+  foreach($Req_Bar_Poids as $data){
+    $Bar_Type_Weight[] = $data['type_weight'];
+    $Bar_Weight_count[] = $data['count'];
+  }
+  
+  // Fermer la connexion
+  $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">

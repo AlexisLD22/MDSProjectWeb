@@ -1,3 +1,105 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    // Redirect to login.php if not logged in
+    header("Location: ../../login.php");
+    exit();
+}
+
+$host = "localhost";
+$username = "root";
+$password = "root";
+$database = "toiletagecanin";
+
+// Connexion avec la base de donnée
+$conn = new mysqli($host, $username, $password, $database);
+
+// Check for database connection error
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+
+// Recupérer les informations pour ajouter seulement un nouveau client
+$firstname = $_POST["InputFirstName1"];
+$lastname= $_POST["InputLastName1"];
+$mail= $_POST["InputEmail1"];
+$telephone= $_POST["InputPhone1"];
+$postal_address= $_POST["InputAdress1"];
+$commentary= $_POST["InputCommentary1"];
+
+// Récuperer les informations pour ajouter seulement un nouvel animal
+$name = $_POST["inputName1"];
+$breed = $_POST["inputBreed1"];
+$weight = $_POST["InputHeight1"];
+$height = $_POST["InputWeight1"];
+$age= $_POST["InputAge1"];
+$mail2= $_POST["inputEmail2"];
+$commentary2= $_POST["inputCommentary2"];
+
+// Sanitize the inputs (prevent SQL injection)
+$mail = $conn->real_escape_string($mail);
+$mail2 = $conn->real_escape_string($mail2);
+
+// On verifie que la personne n'existe pas déjà pour les Customer Only (CO) :
+$query_Verif_CO = "SELECT * FROM customers WHERE mail = '$mail';";
+$result = $conn->query($query_Verif_CO);
+
+// On verifie que le chien n'existe pas déjà pour les Animals Only (AO) :
+$query_Verif_AO = "SELECT c.mail, a.name, a.breed FROM animals AS A INNER JOIN customers AS C ON c.id = a.customer_id WHERE mail = '$mail2';";
+$result2 = $conn->query($query_Verif_AO);
+
+// Creation d'un client venant du formulaire CO :
+if ($result->num_rows === 1) {
+    $error_message1 = "Il semblerait que le client existe déjà";
+} else {
+    // test pour se prévenir de tout bug éventuel
+    if (strlen($postal_address) > 0 && strlen($firstname) > 0 && strlen($lastname) > 0 && strlen($mail) > 0  && 
+    strlen($postal_address) <= 45 && strlen($firstname) <= 45 && strlen($lastname) <= 45 && strlen($telephone) === 10) {    
+        $query_add_customerOnly = "INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES
+        ('$firstname', '$lastname', '$mail', '$telephone', '$postal_address', '$commentary')";
+        $conn->query($query_add_customerOnly);
+    } else {
+        $error_message1 = "Il y a une erreur lors de l'enregistrement du client";
+    }
+}
+
+// Creation d'un animal venant du formulaire AO :
+if ($result2->num_rows === 1) {
+    $error_message2 = "Il semblerait que l'animal existe déjà";
+} else {
+    // On récupere le customer id
+    $Req_CustomerId = mysqli_query($conn, "SELECT id FROM customers where mail='$mail2';");
+    $CustomerData = mysqli_fetch_assoc($Req_CustomerId);
+    $CustomerId = $CustomerData['id'];
+    // test pour se prévenir de tout bug éventuel
+    if (strlen($name) > 0 && strlen($breed) > 0 && strlen($name) <= 45 && strlen($breed) <= 45 &&
+    strlen($age) > 0 && strlen($age) <= 3 && strlen($weight) > 0 && strlen($height) > 0 && 
+    strlen($weight) <= 3 && strlen($height) <= 3) {
+        $query_add_animalOnly = "INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES
+        ('$name', '$breed', '$age', '$weight', '$height', '$commentary2', '$CustomerId');";
+        $conn->query($query_add_animalOnly);
+    } else {
+        $error_message2 = "Il y a une erreur lors de l'enregistrement de l'animal";
+    }
+}
+
+// if ($result->num_rows === 1) {
+//     // Login successful
+//     session_start(); // Start a new session or resume the existing session
+//     $_SESSION['is_logged_in'] = true; // Set a session variable to indicate login
+//     header("Location: index.php"); // Redirect to the index.php page
+//     exit();
+// } else {
+//     // Login failed
+//     $error_message = "Login failed. Please check your email and password.";
+// }
+
+
+// Close the database connection
+$conn->close();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -254,103 +356,117 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
+          <!-- DEBUT COLONNE GAUCHE -->
           <div class="col-md-6">
-            <!-- general form elements -->
+            <!-- DEBUT FORM CUSTOMER ONLY -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Quick Example</h3>
+                <h3 class="card-title">Inscription Client Uniquement</h3>
               </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form>
+              <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    <label for="InputFirstName1">Prénom</label>
+                    <input type="FirstName" class="form-control" name="InputFirstName1" placeholder="Prénom">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <label for="InputLastName1">Nom de Famille</label>
+                    <input type="LastName" class="form-control" name="InputLastName1" placeholder="Nom de Famille">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                      </div>
-                      <div class="input-group-append">
-                        <span class="input-group-text">Upload</span>
-                      </div>
-                    </div>
+                    <label for="InputEmail1">Adresse mail</label>
+                    <input type="Email" class="form-control" name="InputEmail1" placeholder="Adresse mail">
                   </div>
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                  <div class="form-group">
+                    <label for="InputPhone1">Téléphone</label>
+                    <input type="Phone" class="form-control" name="InputPhone1" placeholder="Téléphone">
                   </div>
+                  <div class="form-group">
+                    <label for="InputAdress1">Adresse postal</label>
+                    <input type="Adress" class="form-control" name="InputAdress1" placeholder="Adresse postal">
+                  </div>
+                  <div class="form-group">
+                    <label for="InputCommentaire1">Commentaire</label>
+                    <textarea class="form-control" rows="3" name="InputCommentary1" placeholder="Commentaire ..."></textarea>
+                  </div>
+                  
+                    <?php if (isset($error_message1)) : ?>
+                        <div class="error-message"><?php echo $error_message1; ?></div>
+                    <?php endif; ?>
                 </div>
-                <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Enregistrer nouveau client</button>
                 </div>
               </form>
             </div>
-            <!-- /.card -->
+            <!-- FIN FORM CUSTOMER ONLY -->
 
-            <!-- general form elements -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Different Styles</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <h4>Input</h4>
-                <div class="form-group">
-                  <label for="exampleInputBorder">Bottom Border only <code>.form-control-border</code></label>
-                  <input type="text" class="form-control form-control-border" id="exampleInputBorder" placeholder=".form-control-border">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputBorderWidth2">Bottom Border only 2px Border <code>.form-control-border.border-width-2</code></label>
-                  <input type="text" class="form-control form-control-border border-width-2" id="exampleInputBorderWidth2" placeholder=".form-control-border.border-width-2">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputRounded0">Flat <code>.rounded-0</code></label>
-                  <input type="text" class="form-control rounded-0" id="exampleInputRounded0" placeholder=".rounded-0">
-                </div>
-                <h4>Custom Select</h4>
-                <div class="form-group">
-                  <label for="exampleSelectBorder">Bottom Border only <code>.form-control-border</code></label>
-                  <select class="custom-select form-control-border" id="exampleSelectBorder">
-                    <option>Value 1</option>
-                    <option>Value 2</option>
-                    <option>Value 3</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="exampleSelectBorderWidth2">Bottom Border only <code>.form-control-border.border-width-2</code></label>
-                  <select class="custom-select form-control-border border-width-2" id="exampleSelectBorderWidth2">
-                    <option>Value 1</option>
-                    <option>Value 2</option>
-                    <option>Value 3</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="exampleSelectRounded0">Flat <code>.rounded-0</code></label>
-                  <select class="custom-select rounded-0" id="exampleSelectRounded0">
-                    <option>Value 1</option>
-                    <option>Value 2</option>
-                    <option>Value 3</option>
-                  </select>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-            <!-- Input addon -->
+            <!-- DEBUT FORM ANIMAL ONLY -->
             <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Inscription Animal Uniquement</h3>
+              </div>
+              <form class="form-horizontal" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <div class="card-body">
+                  <div class="form-group row">
+                    <label for="inputName1" class="col-sm-3 col-form-label">Nom de l'animal</label>
+                    <div class="col-sm-9">
+                      <input type="Name" class="form-control" name="inputName1" placeholder="Nom de l'animal">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputBreed1" class="col-sm-3 col-form-label">Race de l'animal</label>
+                    <div class="col-sm-9">
+                      <input type="Breed" class="form-control" name="inputBreed1" placeholder="Race de l'animal">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-4">
+                        <label for="InputHeight1">Taille</label>
+                        <input type="Height" class="form-control" name="InputHeight1" placeholder="Height">
+                    </div>
+                    <div class="col-4">
+                        <label for="InputWeight1">Poids</label>
+                        <input type="Weight" class="form-control" name="InputWeight1" placeholder="Weight">
+                    </div>
+                    <div class="col-4">
+                        <label for="InputAge1">Age</label>
+                        <input type="Age" class="form-control" name="InputAge1" placeholder="Age">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputEmail2" class="col-sm-4 col-form-label">E-mail du propriétaire</label>
+                    <div class="col-sm-8">
+                      <input type="Email" class="form-control" name="inputEmail2" placeholder="E-mail du propriétaire">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="InputCommentaire2">Commentaire pour le chien</label>
+                    <textarea class="form-control" rows="3" name="inputCommentary2" placeholder="Commentaire ..."></textarea>
+                  </div>
+                    <?php if (isset($error_message2)) : ?>
+                        <div class="error-message"><?php echo $error_message2; ?></div>
+                    <?php endif; ?>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-info">Enregistrer nouveau chien</button>
+                  <button type="submit" class="btn btn-default float-right">Cancel</button>
+                </div>
+                <!-- /.card-footer -->
+              </form>
+            </div>
+            <!-- FIN FORM ANIMAL ONLY -->
+          </div>
+          <!-- FIN COLONNE GAUCHE -->
+
+
+          <!-- DEBUT COLONNE DROITE -->
+          <div class="col-md-6">
+
+                        <!-- Input addon -->
+                        <div class="card card-info">
               <div class="card-header">
                 <h3 class="card-title">Input Addon</h3>
               </div>
@@ -478,405 +594,9 @@
               </div>
               <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-            <!-- Horizontal Form -->
-            <div class="card card-info">
-              <div class="card-header">
-                <h3 class="card-title">Horizontal Form</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form class="form-horizontal">
-                <div class="card-body">
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                    <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="offset-sm-2 col-sm-10">
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                        <label class="form-check-label" for="exampleCheck2">Remember me</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-info">Sign in</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
-                </div>
-                <!-- /.card-footer -->
-              </form>
-            </div>
-            <!-- /.card -->
 
           </div>
-          <!--/.col (left) -->
-          <!-- right column -->
-          <div class="col-md-6">
-            <!-- Form Element sizes -->
-            <div class="card card-success">
-              <div class="card-header">
-                <h3 class="card-title">Different Height</h3>
-              </div>
-              <div class="card-body">
-                <input class="form-control form-control-lg" type="text" placeholder=".form-control-lg">
-                <br>
-                <input class="form-control" type="text" placeholder="Default input">
-                <br>
-                <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm">
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Different Width</h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-3">
-                    <input type="text" class="form-control" placeholder=".col-3">
-                  </div>
-                  <div class="col-4">
-                    <input type="text" class="form-control" placeholder=".col-4">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder=".col-5">
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-            <!-- general form elements disabled -->
-            <div class="card card-warning">
-              <div class="card-header">
-                <h3 class="card-title">General Elements</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- text input -->
-                      <div class="form-group">
-                        <label>Text</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Text Disabled</label>
-                        <input type="text" class="form-control" placeholder="Enter ..." disabled>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- textarea -->
-                      <div class="form-group">
-                        <label>Textarea</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Textarea Disabled</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter ..." disabled></textarea>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- input states -->
-                  <div class="form-group">
-                    <label class="col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Input with
-                      success</label>
-                    <input type="text" class="form-control is-valid" id="inputSuccess" placeholder="Enter ...">
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="inputWarning"><i class="far fa-bell"></i> Input with
-                      warning</label>
-                    <input type="text" class="form-control is-warning" id="inputWarning" placeholder="Enter ...">
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="inputError"><i class="far fa-times-circle"></i> Input with
-                      error</label>
-                    <input type="text" class="form-control is-invalid" id="inputError" placeholder="Enter ...">
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- checkbox -->
-                      <div class="form-group">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" checked>
-                          <label class="form-check-label">Checkbox checked</label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" disabled>
-                          <label class="form-check-label">Checkbox disabled</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <!-- radio -->
-                      <div class="form-group">
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="radio1">
-                          <label class="form-check-label">Radio</label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="radio1" checked>
-                          <label class="form-check-label">Radio checked</label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" disabled>
-                          <label class="form-check-label">Radio disabled</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Select</label>
-                        <select class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Select Disabled</label>
-                        <select class="form-control" disabled>
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- Select multiple-->
-                      <div class="form-group">
-                        <label>Select Multiple</label>
-                        <select multiple class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Select Multiple Disabled</label>
-                        <select multiple class="form-control" disabled>
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            <!-- general form elements disabled -->
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Custom Elements</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- checkbox -->
-                      <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1">
-                          <label for="customCheckbox1" class="custom-control-label">Custom Checkbox</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input" type="checkbox" id="customCheckbox2" checked>
-                          <label for="customCheckbox2" class="custom-control-label">Custom Checkbox checked</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input" type="checkbox" id="customCheckbox3" disabled>
-                          <label for="customCheckbox3" class="custom-control-label">Custom Checkbox disabled</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input custom-control-input-danger" type="checkbox" id="customCheckbox4" checked>
-                          <label for="customCheckbox4" class="custom-control-label">Custom Checkbox with custom color</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="checkbox" id="customCheckbox5" checked>
-                          <label for="customCheckbox5" class="custom-control-label">Custom Checkbox with custom color outline</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <!-- radio -->
-                      <div class="form-group">
-                        <div class="custom-control custom-radio">
-                          <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio">
-                          <label for="customRadio1" class="custom-control-label">Custom Radio</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio" checked>
-                          <label for="customRadio2" class="custom-control-label">Custom Radio checked</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input class="custom-control-input" type="radio" id="customRadio3" disabled>
-                          <label for="customRadio3" class="custom-control-label">Custom Radio disabled</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input class="custom-control-input custom-control-input-danger" type="radio" id="customRadio4" name="customRadio2" checked>
-                          <label for="customRadio4" class="custom-control-label">Custom Radio with custom color</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="radio" id="customRadio5" name="customRadio2">
-                          <label for="customRadio5" class="custom-control-label">Custom Radio with custom color outline</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Custom Select</label>
-                        <select class="custom-select">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Custom Select Disabled</label>
-                        <select class="custom-select" disabled>
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <!-- Select multiple-->
-                      <div class="form-group">
-                        <label>Custom Select Multiple</label>
-                        <select multiple class="custom-select">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label>Custom Select Multiple Disabled</label>
-                        <select multiple class="custom-select" disabled>
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                      <label class="custom-control-label" for="customSwitch1">Toggle this custom switch element</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                      <input type="checkbox" class="custom-control-input" id="customSwitch3">
-                      <label class="custom-control-label" for="customSwitch3">Toggle this custom switch element with custom colors danger/success</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" disabled id="customSwitch2">
-                      <label class="custom-control-label" for="customSwitch2">Disabled custom switch element</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="customRange1">Custom range</label>
-                    <input type="range" class="custom-range" id="customRange1">
-                  </div>
-                  <div class="form-group">
-                    <label for="customRange2">Custom range (custom-range-danger)</label>
-                    <input type="range" class="custom-range custom-range-danger" id="customRange2">
-                  </div>
-                  <div class="form-group">
-                    <label for="customRange3">Custom range (custom-range-teal)</label>
-                    <input type="range" class="custom-range custom-range-teal" id="customRange3">
-                  </div>
-                  <div class="form-group">
-                    <!-- <label for="customFile">Custom File</label> -->
-
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="customFile">
-                      <label class="custom-file-label" for="customFile">Choose file</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                  </div>
-                </form>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!--/.col (right) -->
+          <!-- FIN COLONNE DROITE -->
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -890,26 +610,20 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- bs-custom-file-input -->
-<script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
 <!-- Page specific script -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../dist/js/demo.js"></script>
 <script>
 $(function () {
   bsCustomFileInput.init();

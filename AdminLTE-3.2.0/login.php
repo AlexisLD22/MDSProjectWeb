@@ -2,7 +2,7 @@
 // Check if the login form is submitted
 if (isset($_POST['login'])) {
     // Database connection settings (replace with your own)
-    $host = "localhost:8889";
+    $host = "localhost";
     $username = "root";
     $password = "root";
     $database = "toiletagecanin";
