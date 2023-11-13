@@ -61,7 +61,7 @@ $query_Verif_CO = "SELECT * FROM customers WHERE mail = '$mail';";
 $result = $conn->query($query_Verif_CO);
 
 // On verifie que le chien n'existe pas déjà pour les Animals Only (AO) :
-$query_Verif_AO = "SELECT c.mail, a.name, a.breed FROM animals AS A INNER JOIN customers AS C ON c.id = a.customer_id WHERE mail = '$mail2';";
+$query_Verif_AO = "SELECT * FROM animals AS A INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = '$name2' AND c.mail = '$mail2';";
 $result2 = $conn->query($query_Verif_AO);
 
 // On vérifie que la personne n'existe pas déjà pour les Customers & Animals (CA) :
@@ -97,7 +97,7 @@ if ($result->num_rows === 1) {
     strlen($age2) > 0 && strlen($age2) <= 3 && strlen($weight2) > 0 && strlen($height2) > 0 && 
     strlen($weight2) <= 3 && strlen($height2) <= 3) {
         $query_add_animalOnly = "INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES
-        ('$name2', '$breed2', '$age2', '$weight2', '$height2', '$commentary2', '$CustomerId');";
+        ('$name2', '$breed2', '$age2', '$weight2', '$height2', '$commentary2', '$CustomerId2');";
         $conn->query($query_add_animalOnly);
     } else {
         $error_message2 = "Il y a une erreur lors de l'enregistrement de l'animal";
