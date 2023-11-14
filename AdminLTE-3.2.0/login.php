@@ -30,6 +30,12 @@ if (isset($_POST['login'])) {
         // Login successful
         session_start(); // Start a new session or resume the existing session
         $_SESSION['is_logged_in'] = true; // Set a session variable to indicate login
+
+        // Récupérer le nom et prénom de l'utilisateur qui vient de se connecter : 
+        $Req_First_Last_Name = mysqli_query($conn, "SELECT firstname as FirstName, lastname as LastName FROM users WHERE mail='$email';");
+        $UserDetail = mysqli_fetch_assoc($Req_First_Last_Name);
+        $_SESSION['FirstName'] = $UserDetail["FirstName"];
+        $_SESSION['LastName'] = $UserDetail["LastName"];
         header("Location: index.php"); // Redirect to the index.php page
         exit();
     } else {
