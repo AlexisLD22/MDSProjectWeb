@@ -20,9 +20,9 @@
 <div class="wrapper">
 
   <!-- Importation du fichier naviation.php -->
-  <?php require_once 'navigation.php';?>
+  <?php require_once 'include/navigation.php';?>
   <!-- Importation du fichier aside.php -->
-  <?php require_once 'aside.php';?>
+  <?php require_once 'include/aside.php';?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -938,7 +938,7 @@
   </div>
   
   <!-- Importation du fichier footer.php -->
-  <?php require_once 'footer.php';?>
+  <?php require_once 'include/footer.php';?>
 </div>
 <!-- ./wrapper -->
 

@@ -31,7 +31,7 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <a href="general.php" class="nav-link">
+          <a href="inscriptions.php" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
             <p>Inscriptions</p>
           </a>
@@ -46,7 +46,7 @@
                 Calendar
               </p>
             </a>
-            <a href="projects.php" class="nav-link">
+            <a href="listings.php" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>Listing</p>
             </a>
