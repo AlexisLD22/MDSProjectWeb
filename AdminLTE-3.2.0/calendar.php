@@ -1,3 +1,9 @@
+<?php
+
+require_once 'include/session.php';
+require_once 'include/conn.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

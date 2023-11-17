@@ -1,25 +1,7 @@
 <?php
-session_start(); // Start a new session or resume the existing session
 
-// Check if the user is not logged in
-if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-    // Redirect to login.php if not logged in
-    header("Location: login.php");
-    exit();
-}
-
-$host = "localhost";
-$username = "root";
-$password = "root";
-$database = "toiletagecanin";
-
-// Connexion avec la base de donnée
-$conn = new mysqli($host, $username, $password, $database);
-
-// Check for database connection error
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
+require_once 'include/session.php';
+require_once 'include/conn.php';
 
 $Req_statistiques = mysqli_query($conn,"SELECT ROUND(AVG(weight)) AS average_weight FROM animals;");
 $Number_Stats = mysqli_fetch_assoc($Req_statistiques);

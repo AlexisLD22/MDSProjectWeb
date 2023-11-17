@@ -1,24 +1,7 @@
 <?php
-session_start();
 
-if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-    // Redirect to login.php if not logged in
-    header("Location: login.php");
-    exit();
-}
-
-$host = "localhost";
-$username = "root";
-$password = "root";
-$database = "toiletagecanin";
-
-// Connexion avec la base de donnée
-$conn = new mysqli($host, $username, $password, $database);
-
-// Check for database connection error
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
+require_once 'include/session.php';
+require_once 'include/conn.php';
 
 // Requête pour récuperer les Clients :                            
 $Req_Customers = mysqli_query($conn, "SELECT c.firstname as FirstName, c.lastname as LastName, COUNT(a.customer_id) as CountAnimals, c.id as ID FROM customers as c LEFT JOIN animals as a ON a.customer_id = c.id GROUP BY c.id;");
