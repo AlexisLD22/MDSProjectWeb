@@ -1,8 +1,86 @@
 <?php
-
 require_once 'include/session.php';
 require_once 'include/conn.php';
 
+
+// Requêtes pour récuperer les différents noms de services
+$Req_Services = mysqli_query($conn, "SELECT name FROM services;");
+
+// Requêtes pour récuperer les différents noms d'employées
+$Req_Users = mysqli_query($conn, "SELECT CONCAT(firstname,' ',lastname) as name FROM users;");
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  
+  // Récuperation des informations du formulaire d'ajout d'un rendez-vous
+  $mail = $_POST["InputMail"];
+  $name = $_POST["InputName"];
+  $service = $_POST["InputService"];
+  $user = $_POST["InputUser"];
+  $date_start = $_POST["InputDate1"];
+  $date_end = $_POST["InputDate2"];
+  $is_paid = strlen($_POST["InputPaid"]);
+  
+  // Sanitize the inputs (prevent SQL injection)
+  $mail = $conn->real_escape_string($mail);
+
+  // Récupère l'id du service choisi :
+    $Req_service = mysqli_query($conn, "SELECT id FROM services WHERE name = '$service';");
+    $ServiceData = mysqli_fetch_assoc($Req_service);
+    $ServiceID = $ServiceData['id'];
+
+  // Récupère l'id de l'employé :
+    $Req_User = mysqli_query($conn, "SELECT id FROM users WHERE CONCAT(firstname,' ',lastname) = '$user';");
+    $UserData = mysqli_fetch_assoc($Req_User);
+    $UserID = $UserData['id'];
+
+  // Récupère l'id du nom de l'animal:
+    $Req_name = mysqli_query($conn, "SELECT id FROM animals WHERE name = '$name';");
+    $NameData = mysqli_fetch_assoc($Req_name);
+    $NameID = $NameData['id'];
+
+  // Requête pour vérifier si les différents champs sont bons:
+    $Query_Verif_service = "SELECT * FROM users as u INNER JOIN capabilities as c on c.user_id = u.id INNER JOIN services as s on s.id = c.service_id WHERE CONCAT(u.firstname,' ',u.lastname) = '$user' AND s.name = '$service';";
+    $Query_Verif_name = "SELECT * FROM animals as a INNER JOIN customers as c ON c.id = a.customer_id WHERE c.mail = '$mail' AND a.name= '$name';";
+
+  // Check si l'employé à les capacités de faire le service demandé :
+  $result_service = $conn->query($Query_Verif_service);
+  // Check si le nom de l'animal et le mail du client coïncide :
+  $result_name = $conn->query($Query_Verif_name);
+
+
+  //Chgmt date pour coller avec la bdd
+  $dateTime_start = DateTime::createFromFormat('Y-m-d\TH:i', $date_start);
+  $dateTime_end = DateTime::createFromFormat('Y-m-d\TH:i', $date_end);
+
+  // Changement du format de la date pour le début et la fin en adéquation avec les infos dans la base de données
+  if ($dateTime_start && $dateTime_start->format('Y') >= 2000 && $dateTime_start->format('Y') <= 2050 && $dateTime_end && $dateTime_end->format('Y') >= 2000 && $dateTime_end->format('Y') <= 2050) {
+      $date_start = $dateTime_start->format('Y-m-d H:i:s');
+      $date_end = $dateTime_end->format('Y-m-d H:i:s');
+
+    } else {
+  }
+  // // Ajout Enlève les erreurs si il y en a 
+  // $date1 = new DateTime($date_start);
+  // $date2 = new DateTime($date_end);
+
+  // $interval = $date1->diff($date2);
+  // echo $interval->format('%r%a days, %h hours, %i minutes');
+
+
+  // Ajout dans la bdd
+
+  // Check si animal + mail correct :
+  if ($result_name->num_rows === 1 && isset($result_service) && is_object($result_service) && $result_service->num_rows === 1) {
+    
+    //l'animal est bien relier au client + le client existe
+    $Query_add_appointment = "INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, service_id) VALUES ('$date_start', '$date_end', '$is_paid', '$UserID','$NameID', '$ServiceID')";
+    $conn->query($Query_add_appointment);
+  } elseif ($result_name->num_rows === 1) {
+      $error_message = "L'employé n'a pas les compétences de faire la tâche demandée";
+  } else {
+      $error_message = "Il semblerait que le client ou l'animal n'existe pas";
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,53 +131,61 @@ require_once 'include/conn.php';
         <div class="row">
           <div class="col-md-3">
             <div class="sticky-top mb-3">
-              <div class="card">
-                <div class="card-header">
-                  <h4 class="card-title">Draggable Events</h4>
-                </div>
-                <div class="card-body">
-                  <!-- the events -->
-                  <div id="external-events">
-                    <div class="external-event bg-success">Lunch</div>
-                    <div class="external-event bg-warning">Go home</div>
-                    <div class="external-event bg-info">Do homework</div>
-                    <div class="external-event bg-primary">Work on UI design</div>
-                    <div class="external-event bg-danger">Sleep tight</div>
-                    <div class="checkbox">
-                      <label for="drop-remove">
-                        <input type="checkbox" id="drop-remove">
-                        remove after drop
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-              </div>
               <!-- /.card -->
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">Create Event</h3>
+                  <h3 class="card-title">Ajout d'un rendez-vous</h3>
                 </div>
                 <div class="card-body">
-                  <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                    <ul class="fc-color-picker" id="color-chooser">
-                      <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
-                      <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
-                      <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
-                      <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
-                      <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
-                    </ul>
-                  </div>
-                  <!-- /btn-group -->
-                  <div class="input-group">
-                    <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-
-                    <div class="input-group-append">
-                      <button id="add-new-event" type="button" class="btn btn-primary">Add</button>
+                  <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                    <div class="form-group">
+                      <label for="InputMail">Email</label>
+                      <input type="Email" class="form-control" name="InputMail" placeholder="adresse mail">
                     </div>
-                    <!-- /btn-group -->
-                  </div>
-                  <!-- /input-group -->
+                    <div class="form-group">
+                        <label for="InputName">Nom de l'animal</label>
+                        <input type="Text" class="form-control" name="InputName" placeholder="Nom de l'animal">
+                    </div>
+                    <div class="form-group">
+                      <label for="InputService">Raison du rendez-vous</label>
+                      <select class="form-control" name="InputService">
+                          <?php
+                          while ($service_Info = mysqli_fetch_assoc($Req_Services)) {
+                              echo '<option value="' . $service_Info['name'] . '">' . $service_Info['name'] . '</option>';
+                          }
+                          ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="InputUser"> Ajout de l'employé </label>
+                      <select class="form-control" name="InputUser">
+                          <?php
+                          while ($user_Info = mysqli_fetch_assoc($Req_Users)) {
+                              echo '<option value="' . $user_Info['name'] . '">' . $user_Info['name'] . '</option>';
+                          }
+                          ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="InputDate1">Date début du rendez-vous</label>
+                        <input type="datetime-local" class="form-control" name="InputDate1">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputDate2">Date fin du rendez-vous</label>
+                        <input type="datetime-local" class="form-control" name="InputDate2">
+                    </div>
+                    <div class="form-group row">
+                      <label for="InputPaid">Etat du payement :</label>
+                      <input type="checkbox" name="InputPaid" value="1">
+                      <div class="input-group">
+                        <button type="submit" class="btn btn-primary">Ajouter le rendez vous</button>
+                      </div>
+                      <?php if (isset($error_message)) : ?>
+                          <div class="error-message"><?php echo $error_message; ?></div>
+                      <?php endif; ?>
+                    </div>
+                    <!-- /input-group -->
+                  </form>
                 </div>
               </div>
             </div>
@@ -180,27 +266,11 @@ require_once 'include/conn.php';
         m    = date.getMonth(),
         y    = date.getFullYear()
 
+    
     var Calendar = FullCalendar.Calendar;
-    var Draggable = FullCalendar.Draggable;
 
     var containerEl = document.getElementById('external-events');
-    var checkbox = document.getElementById('drop-remove');
     var calendarEl = document.getElementById('calendar');
-
-    // initialize the external events
-    // -----------------------------------------------------------------
-
-    new Draggable(containerEl, {
-      itemSelector: '.external-event',
-      eventData: function(eventEl) {
-        return {
-          title: eventEl.innerText,
-          backgroundColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
-          borderColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
-          textColor: window.getComputedStyle( eventEl ,null).getPropertyValue('color'),
-        };
-      }
-    });
 
     var calendar = new Calendar(calendarEl, {
       headerToolbar: {
@@ -237,7 +307,6 @@ require_once 'include/conn.php';
           start          : new Date(y, m, d, 12, 0),
           end            : new Date(y, m, d, 14, 0),
           allDay         : false,
-          backgroundColor: '#00c0ef', //Info (aqua)
           borderColor    : '#00c0ef' //Info (aqua)
         },
         {
@@ -257,20 +326,13 @@ require_once 'include/conn.php';
           borderColor    : '#3c8dbc' //Primary (light-blue)
         }
       ],
-      editable  : true,
-      droppable : true, // this allows things to be dropped onto the calendar !!!
-      drop      : function(info) {
-        // is the "remove after drop" checkbox checked?
-        if (checkbox.checked) {
-          // if so, remove the element from the "Draggable Events" list
-          info.draggedEl.parentNode.removeChild(info.draggedEl);
-        }
-      }
+      editable  : true
     });
 
     calendar.render();
     // $('#calendar').fullCalendar()
 
+    
     /* ADDING EVENTS */
     var currColor = '#3c8dbc' //Red by default
     // Color chooser button
@@ -291,19 +353,6 @@ require_once 'include/conn.php';
       if (val.length == 0) {
         return
       }
-
-      // Create events
-      var event = $('<div />')
-      event.css({
-        'background-color': currColor,
-        'border-color'    : currColor,
-        'color'           : '#fff'
-      }).addClass('external-event')
-      event.text(val)
-      $('#external-events').prepend(event)
-
-      // Add draggable funtionality
-      ini_events(event)
 
       // Remove event from text input
       $('#new-event').val('')

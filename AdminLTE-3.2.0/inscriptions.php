@@ -95,7 +95,6 @@ if ($result3->num_rows === 1) {
   // Test pour ajouter le clien uniquement :
   if (strlen($postal_address3) > 0 && strlen($firstname3) > 0 && strlen($lastname3) > 0 && strlen($mail3) > 0  && 
   strlen($postal_address3) <= 45 && strlen($firstname3) <= 45 && strlen($lastname3) <= 45 && strlen($telephone3) === 10) {
-    echo "on est la";
 
     $query_add_customerCA = "INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES
     ('$firstname3', '$lastname3', '$mail3', '$telephone3', '$postal_address3', '$commentary3')";
@@ -153,12 +152,12 @@ $conn->close();
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>General Form</h1>
+            <h1>Inscriptions</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">General Form</li>
+              <li class="breadcrumb-item active">Inscriptions</li>
             </ol>
           </div>
         </div>
@@ -273,7 +272,6 @@ $conn->close();
             <!-- FIN FORM ANIMAL ONLY -->
           </div>
           <!-- FIN COLONNE GAUCHE -->
-
 
           <!-- DEBUT COLONNE DROITE -->
           <div class="col-md-6">
