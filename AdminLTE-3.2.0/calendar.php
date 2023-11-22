@@ -81,6 +81,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $error_message = "Il semblerait que le client ou l'animal n'existe pas";
   }
 }
+
+
+// Récuperation des informations pour ajouter dans le calendar
+
+$Req_Calendar = mysqli_query($conn, "SELECT a.id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");
+
+$result = array();
+while ($row = mysqli_fetch_assoc($Req_Calendar)) {
+    $event = array(
+        'title' => $row['nom_service'] .' de ' . $row['nom_animal'] . ' - ' . $row['nom_client'],
+        'start' => $row['start'],
+        'end' => $row['end'],
+        'color' => $row['is_paid'] ? 'green' : 'red', // Adjust color based on is_paid value
+    );
+    $result[] = $event;
+}
+
+$result = json_encode($result);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -191,6 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
           </div>
           <!-- /.col -->
+          <input id="event-datas" type="hidden" value='<?php echo($result); ?>'>
           <div class="col-md-9">
             <div class="card card-primary">
               <div class="card-body p-0">
@@ -234,40 +253,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     /* initialize the external events
      -----------------------------------------------------------------*/
-    function ini_events(ele) {
-      ele.each(function () {
+    // function ini_events(ele) {
+    //   ele.each(function () {
 
-        // create an Event Object (https://fullcalendar.io/docs/event-object)
-        // it doesn't need to have a start or end
-        var eventObject = {
-          title: $.trim($(this).text()) // use the element's text as the event title
-        }
+    //     // create an Event Object (https://fullcalendar.io/docs/event-object)
+    //     // it doesn't need to have a start or end
+    //     var eventObject = {
+    //       title: $.trim($(this).text()) // use the element's text as the event title
+    //     }
 
-        // store the Event Object in the DOM element so we can get to it later
-        $(this).data('eventObject', eventObject)
+    //     // store the Event Object in the DOM element so we can get to it later
+    //     $(this).data('eventObject', eventObject)
 
-        // make the event draggable using jQuery UI
-        $(this).draggable({
-          zIndex        : 1070,
-          revert        : true, // will cause the event to go back to its
-          revertDuration: 0  //  original position after the drag
-        })
+    //     // make the event draggable using jQuery UI
+    //     $(this).draggable({
+    //       zIndex        : 1070,
+    //       revert        : true, // will cause the event to go back to its
+    //       revertDuration: 0  //  original position after the drag
+    //     })
 
-      })
-    }
+    //   })
+    // }
 
-    ini_events($('#external-events div.external-event'))
+    // ini_events($('#external-events div.external-event'))
 
     /* initialize the calendar
-     -----------------------------------------------------------------*/
-    //Date for the calendar events (dummy data)
-    var date = new Date()
-    var d    = date.getDate(),
-        m    = date.getMonth(),
-        y    = date.getFullYear()
-
-    
+     -----------------------------------------------------------------*/    
     var Calendar = FullCalendar.Calendar;
+
+    let event_datas = document.querySelector("#event-datas").value;
+    let tableau = JSON.parse(event_datas);
 
     var containerEl = document.getElementById('external-events');
     var calendarEl = document.getElementById('calendar');
@@ -279,53 +294,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         right : 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       themeSystem: 'bootstrap',
-      //Random default events
-      events: [
-        {
-          title          : 'All Day Event',
-          start          : new Date(y, m, 1),
-          backgroundColor: '#f56954', //red
-          borderColor    : '#f56954', //red
-          allDay         : true
-        },
-        {
-          title          : 'Long Event',
-          start          : new Date(y, m, d - 5),
-          end            : new Date(y, m, d - 2),
-          backgroundColor: '#f39c12', //yellow
-          borderColor    : '#f39c12' //yellow
-        },
-        {
-          title          : 'Meeting',
-          start          : new Date(y, m, d, 10, 30),
-          allDay         : false,
-          backgroundColor: '#0073b7', //Blue
-          borderColor    : '#0073b7' //Blue
-        },
-        {
-          title          : 'Lunch',
-          start          : new Date(y, m, d, 12, 0),
-          end            : new Date(y, m, d, 14, 0),
-          allDay         : false,
-          borderColor    : '#00c0ef' //Info (aqua)
-        },
-        {
-          title          : 'Birthday Party',
-          start          : new Date(y, m, d + 1, 19, 0),
-          end            : new Date(y, m, d + 1, 22, 30),
-          allDay         : false,
-          backgroundColor: '#00a65a', //Success (green)
-          borderColor    : '#00a65a' //Success (green)
-        },
-        {
-          title          : 'Click for Google',
-          start          : new Date(y, m, 28),
-          end            : new Date(y, m, 29),
-          url            : 'https://www.google.com/',
-          backgroundColor: '#3c8dbc', //Primary (light-blue)
-          borderColor    : '#3c8dbc' //Primary (light-blue)
-        }
-      ],
+      events: tableau,
+      locale: 'fr',
       editable  : true
     });
 
@@ -333,30 +303,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // $('#calendar').fullCalendar()
 
     
-    /* ADDING EVENTS */
-    var currColor = '#3c8dbc' //Red by default
-    // Color chooser button
-    $('#color-chooser > li > a').click(function (e) {
-      e.preventDefault()
-      // Save color
-      currColor = $(this).css('color')
-      // Add color effect to button
-      $('#add-new-event').css({
-        'background-color': currColor,
-        'border-color'    : currColor
-      })
-    })
-    $('#add-new-event').click(function (e) {
-      e.preventDefault()
-      // Get value and make sure it is not null
-      var val = $('#new-event').val()
-      if (val.length == 0) {
-        return
-      }
+    // /* ADDING EVENTS */
+    // var currColor = '#3c8dbc' //Red by default
+    // // Color chooser button
+    // $('#color-chooser > li > a').click(function (e) {
+    //   e.preventDefault()
+    //   // Save color
+    //   currColor = $(this).css('color')
+    //   // Add color effect to button
+    //   $('#add-new-event').css({
+    //     'background-color': currColor,
+    //     'border-color'    : currColor
+    //   })
+    // })
+    // $('#add-new-event').click(function (e) {
+    //   e.preventDefault()
+    //   // Get value and make sure it is not null
+    //   var val = $('#new-event').val()
+    //   if (val.length == 0) {
+    //     return
+    //   }
 
-      // Remove event from text input
-      $('#new-event').val('')
-    })
+    //   // Remove event from text input
+    //   $('#new-event').val('')
+    // })
   })
 </script>
 </body>
