@@ -1,13 +1,14 @@
 <?php
 
-require_once 'include/session.php';
-require_once 'include/conn.php';
+require_once 'include/class/animals.php';
+require_once 'include/class/customers.php';
 
-$Req_statistiques = mysqli_query($conn,"SELECT ROUND(AVG(weight)) AS average_weight FROM animals;");
-$Number_Stats = mysqli_fetch_assoc($Req_statistiques);
 
-$Req_Listing = mysqli_query($conn, "SELECT COUNT(*) as count FROM Customers;");
-$Number_Listing = mysqli_fetch_assoc($Req_Listing);
+$a = new Animal();
+$Number_Stats = $a->getAvgWeight();
+
+$c = new Customer();
+$Number_Listing = $c->getCount();
 
 ?>
 <!DOCTYPE html>
@@ -94,7 +95,7 @@ $Number_Listing = mysqli_fetch_assoc($Req_Listing);
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?php echo $Number_Listing['count'];?></h3>
+                <h3><?php echo $Number_Listing;?></h3>
 
                 <p>Voir nos Clients :</p>
               </div>
@@ -109,7 +110,7 @@ $Number_Listing = mysqli_fetch_assoc($Req_Listing);
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3><?php echo $Number_Stats['average_weight'];?></h3>
+                <h3><?php echo $Number_Stats;?></h3>
 
                 <p>Voir les statistiques : </p>
               </div>

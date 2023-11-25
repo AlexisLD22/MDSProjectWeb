@@ -1,127 +1,25 @@
 <?php
 
 require_once 'include/session.php';
-require_once 'include/conn.php';
+require_once 'include/class/customers.php';
+require_once 'include/class/animals.php';
 
-// Recupérer les informations pour ajouter seulement un nouveau client
-$firstname = $_POST["InputFirstName1"];
-$lastname= $_POST["InputLastName1"];
-$mail= $_POST["InputEmail1"];
-$telephone= $_POST["InputPhone1"];
-$postal_address= $_POST["InputAdress1"];
-$commentary= $_POST["InputCommentary1"];
-
-// Récuperer les informations pour ajouter seulement un nouvel animal
-$name2 = $_POST["inputName2"];
-$breed2 = $_POST["inputBreed2"];
-$weight2 = $_POST["InputHeight2"];
-$height2 = $_POST["InputWeight2"];
-$age2 = $_POST["InputAge2"];
-$mail2 = $_POST["inputEmail2"];
-$commentary2 = $_POST["inputCommentary2"];
-
-//Récupérer les informations pour ajouter un nouveau client et un animal 
-$firstname3 = $_POST["InputFirstName3"];
-$lastname3 = $_POST["InputLastName3"];
-$mail3 = $_POST["InputEmail3"];
-$telephone3 = $_POST["InputPhone3"];
-$postal_address3 = $_POST["InputAdress3"];
-$commentary3 = $_POST["InputCommentary3"];
-$name3 = $_POST["inputName3"];
-$breed3 = $_POST["inputBreed3"];
-$weight3 = $_POST["InputHeight3"];
-$height3 = $_POST["InputWeight3"];
-$age3 = $_POST["InputAge3"];
-$commentary4 = $_POST["inputCommentary4"];
-
-// Sanitize the inputs (prevent SQL injection)
-$mail = $conn->real_escape_string($mail);
-$mail2 = $conn->real_escape_string($mail2);
-$mail3 = $conn->real_escape_string($mail3);
-
-// On verifie que la personne n'existe pas déjà pour les Customers Only (CO) :
-$query_Verif_CO = "SELECT * FROM customers WHERE mail = '$mail';";
-$result = $conn->query($query_Verif_CO);
-
-// On verifie que le chien n'existe pas déjà pour les Animals Only (AO) :
-$query_Verif_AO = "SELECT * FROM animals AS A INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = '$name2' AND c.mail = '$mail2';";
-$result2 = $conn->query($query_Verif_AO);
-
-// On vérifie que la personne n'existe pas déjà pour les Customers & Animals (CA) :
-$query_Verif_CA = "SELECT * FROM customers WHERE mail = '$mail3';";
-$result3 = $conn->query($query_Verif_CA);
-
-
-// Creation d'un client venant du formulaire CO :
-if ($result->num_rows === 1) {
-    $error_message1 = "Il semblerait que le client existe déjà";
-} else {
-    // test pour se prévenir de tout bug éventuel
-    if (strlen($postal_address) > 0 && strlen($firstname) > 0 && strlen($lastname) > 0 && strlen($mail) > 0  && 
-    strlen($postal_address) <= 45 && strlen($firstname) <= 45 && strlen($lastname) <= 45 && strlen($telephone) === 10) {
-        $query_add_customerOnly = "INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES
-        ('$firstname', '$lastname', '$mail', '$telephone', '$postal_address', '$commentary')";
-        $conn->query($query_add_customerOnly);
-    } else {
-        $error_message1 = "Il y a une erreur lors de l'enregistrement du client";
-    }
+if (isset($_POST['CO'])) {
+  $c = new Customer();
+  $c->AddCustomer($_POST["InputFirstName1"], $_POST["InputLastName1"], $_POST["InputEmail1"], $_POST["InputPhone1"], $_POST["InputAdress1"], $_POST["InputCommentary1"]);
 }
 
-// Creation d'un animal venant du formulaire AO :
-  if ($result2->num_rows === 1) {
-    $error_message2 = "Il semblerait que l'animal existe déjà";
-} else {
-    // On récupere le customer id
-    $Req_CustomerId2 = mysqli_query($conn, "SELECT id FROM customers where mail='$mail2';");
-    $CustomerData2 = mysqli_fetch_assoc($Req_CustomerId2);
-    $CustomerId2 = $CustomerData2['id'];
-    // test pour se prévenir de tout bug éventuel
-    if (strlen($name2) > 0 && strlen($breed2) > 0 && strlen($name2) <= 45 && strlen($breed2) <= 45 &&
-    strlen($age2) > 0 && strlen($age2) <= 3 && strlen($weight2) > 0 && strlen($height2) > 0 && 
-    strlen($weight2) <= 3 && strlen($height2) <= 3) {
-        $query_add_animalOnly = "INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES
-        ('$name2', '$breed2', '$age2', '$weight2', '$height2', '$commentary2', '$CustomerId2');";
-        $conn->query($query_add_animalOnly);
-    } else {
-        $error_message2 = "Il y a une erreur lors de l'enregistrement de l'animal";
-    }
+if (isset($_POST['AO'])) {
+  $a = new Animal();
+  $a->AddAnimal($_POST["inputName2"], $_POST["inputBreed2"], $_POST["InputHeight2"], $_POST["InputWeight2"], $_POST["InputAge2"], $_POST["inputEmail2"], $_POST["inputCommentary2"]);
 }
 
-
-// Creation d'un client et d'un animal venant du formulaire CA :
-if ($result3->num_rows === 1) {
-  $error_message3 = "Il semblerait que le client existe déjà";
-} else {
-  // Test pour ajouter le clien uniquement :
-  if (strlen($postal_address3) > 0 && strlen($firstname3) > 0 && strlen($lastname3) > 0 && strlen($mail3) > 0  && 
-  strlen($postal_address3) <= 45 && strlen($firstname3) <= 45 && strlen($lastname3) <= 45 && strlen($telephone3) === 10) {
-
-    $query_add_customerCA = "INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES
-    ('$firstname3', '$lastname3', '$mail3', '$telephone3', '$postal_address3', '$commentary3')";
-    $conn->query($query_add_customerCA);
-
-    // On récupere le customer id
-    $Req_CustomerId3 = mysqli_query($conn, "SELECT id FROM customers where mail='$mail3';");
-    $CustomerData3 = mysqli_fetch_assoc($Req_CustomerId3);
-    $CustomerId3 = $CustomerData3['id'];
-    // test pour se prévenir de tout bug éventuel
-    if (strlen($name3) > 0 && strlen($breed3) > 0 && strlen($name3) <= 45 && strlen($breed3) <= 45 &&
-    strlen($age3) > 0 && strlen($age3) <= 3 && strlen($weight3) > 0 && strlen($height3) > 0 && 
-    strlen($weight3) <= 3 && strlen($height3) <= 3) {
-        $query_add_animalCA = "INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES
-        ('$name3', '$breed3', '$age3', '$weight3', '$height3', '$commentary4', '$CustomerId3');";
-        $conn->query($query_add_animalCA);
-    } else {
-        $error_message3 = "Il y a une erreur lors de l'enregistrement du client ou de l'animal";
-    }
-  } else {
-    $error_message3 = "Il y a une erreur lors de l'enregistrement du client ou de l'animal";
-  }
+if (isset($_POST['CA'])) {
+  $cu = new Customer();
+  $an = new Animal();
+  $cu->AddCustomer($_POST["InputFirstName3"], $_POST["InputLastName3"], $_POST["InputEmail3"], $_POST["InputPhone3"], $_POST["InputAdress3"], $_POST["InputCommentary3"]);
+  $an->AddAnimal($_POST["inputName3"], $_POST["inputBreed3"], $_POST["InputHeight3"], $_POST["InputWeight3"], $_POST["InputAge3"], $_POST["InputEmail3"], $_POST["inputCommentary4"]);
 }
-
-// Close the database connection
-$conn->close();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +106,7 @@ $conn->close();
                 </div>
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Enregistrer nouveau client</button>
+                  <button type="submit" name="CO" class="btn btn-primary">Enregistrer nouveau client</button>
                 </div>
               </form>
             </div>
@@ -263,8 +161,8 @@ $conn->close();
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-info">Enregistrer nouveau chien</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
+                  <button type="submit" name="AO" class="btn btn-info">Enregistrer nouveau chien</button>
+                  <button type="button" class="btn btn-default float-right" onclick="clearForm()">Cancel</button>
                 </div>
                 <!-- /.card-footer -->
               </form>
@@ -411,7 +309,7 @@ $conn->close();
                 </div>
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-info">Enregistrer nouveau chien</button>
+                  <button type="submit" name="CA" class="btn btn-info">Enregistrer nouveau chien</button>
                   <button type="submit" class="btn btn-default float-right">Cancel</button>
                 </div>
               </form>

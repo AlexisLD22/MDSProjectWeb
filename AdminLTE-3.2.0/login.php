@@ -1,51 +1,11 @@
 <?php
-// Check if the login form is submitted
+
+require_once 'include/conn.php';
+require_once 'include/class/users.php';
+
 if (isset($_POST['login'])) {
-    // Database connection settings (replace with your own)
-    $host = "localhost";
-    $username = "root";
-    $password = "root";
-    $database = "toiletagecanin";
-
-    // Create a database connection
-    $conn = new mysqli($host, $username, $password, $database);
-
-    // Check for database connection error
-    if ($conn->connect_error) {
-        die("Database connection failed: " . $conn->connect_error);
-    }
-
-    // Get user input
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Sanitize the inputs (prevent SQL injection)
-    $email = $conn->real_escape_string($email);
-
-    // Query the database to check if the email and password match
-    $query = "SELECT * FROM users WHERE mail = '$email' AND password = '$password'";
-    $result = $conn->query($query);
-
-    if ($result->num_rows === 1) {
-        // Login successful
-        session_start(); // Start a new session or resume the existing session
-        $_SESSION['is_logged_in'] = true; // Set a session variable to indicate login
-
-        // Récupérer le nom et prénom de l'utilisateur qui vient de se connecter : 
-        $Req_First_Last_Name = mysqli_query($conn, "SELECT firstname as FirstName, lastname as LastName FROM users WHERE mail='$email';");
-        $UserDetail = mysqli_fetch_assoc($Req_First_Last_Name);
-        $_SESSION['FirstName'] = $UserDetail["FirstName"];
-        $_SESSION['LastName'] = $UserDetail["LastName"];
-        header("Location: index.php"); // Redirect to the index.php page
-        exit();
-    } else {
-        // Login failed
-        $error_message = "Login failed. Please check your email and password.";
-    }
-    
-
-    // Close the database connection
-    $conn->close();
+    $u = new User();
+    $u->login($_POST['email'], $_POST['password']);
 }
 ?>
 <!DOCTYPE html>

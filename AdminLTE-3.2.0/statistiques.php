@@ -1,44 +1,14 @@
 <?php
 
 require_once 'include/session.php';
-require_once 'include/conn.php';
+require_once 'include/class/animals.php';
+// require_once 'include/conn.php';
 
-// Requête for Chart Doughnut breed     : Req_Doughnut
-// Requête pour Diagramme Taille        : Req_Bar_Taille
-// Requêtre pour Diagramme Capabilities : Req_Line
-// Requête pour Diagramme Poids         : Req_Bar_Poids
-
-$Req_Doughnut = mysqli_query($conn,"SELECT breed, COUNT(*) as count FROM animals GROUP BY breed;");
-$Req_Bar_Taille = mysqli_query($conn,"SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;");
-$Req_Line = mysqli_query($conn,"SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;");
-$Req_Bar_Poids = mysqli_query($conn,"SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;");
-
-// Affecte des données pour le Chart Doughnut
-foreach($Req_Doughnut as $data){
-    $Doughnut_count[] = $data['count'];
-    $Doughnut_breed[] = $data['breed'];
-}
-
-// Affecte Donnée de la requête pour Diagramme Taille
-foreach($Req_Bar_Taille as $data){
-    $Bar_Type_height[] = $data['type_height'];
-    $Bar_Height_count[] = $data['count'];
-}
-
-// Affecte Donnée de la requête pour Diagramme Capabilities
-foreach($Req_Line as $data){
-  $Line_name[]= $data['name'];
-  $Line_count[] = $data['count'];
-}
-
-// affecte Donnée de la requête pour Diagramme Poids
-foreach($Req_Bar_Poids as $data){
-  $Bar_Type_Weight[] = $data['type_weight'];
-  $Bar_Weight_count[] = $data['count'];
-}
-
-// Fermer la connexion
-$conn->close();
+$a = new Animal();
+$Dougnhut = $a->getBreedData();
+$Height = $a->getHeightData();
+$Capabilites = $a->getCapabilitiesData();
+$Weight = $a->getWeightData();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,10 +141,10 @@ $conn->close();
     new Chart(document.getElementById('donutChart'),{
             type: 'doughnut',
             data:{
-                labels: <?php echo json_encode($Doughnut_breed)?>,
+                labels: <?php echo json_encode(array_column($Dougnhut, 'breed'))?>,
                 datasets: [{
                 label:'Quantité',
-                data: <?php echo json_encode($Doughnut_count)?>,
+                data: <?php echo json_encode(array_column($Dougnhut, 'count'))?>,
                 backgroundColor: [
                     'rgb(255, 99, 132)', 
                     'rgb(54, 162, 235)',
@@ -193,10 +163,10 @@ $conn->close();
     new Chart(document.getElementById('areaChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($Bar_Type_height)?>,
+            labels: <?php echo json_encode(array_column($Height, 'type_height'))?>,
             datasets: [{
                 label: ['Résumé taille'],
-                data: <?php echo json_encode($Bar_Height_count)?>,
+                data: <?php echo json_encode(array_column($Height, 'count'))?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(255, 159, 64, 0.2)',
@@ -227,10 +197,10 @@ $conn->close();
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
-            labels: <?php echo json_encode($Line_name)?>,
+            labels: <?php echo json_encode(array_column($Capabilites, 'name'))?>,
             datasets: [{
                 label: "Nombre d'employés formés pour ce service",
-                data: <?php echo json_encode($Line_count)?>,
+                data: <?php echo json_encode(array_column($Capabilites, 'count'))?>,
                 borderWidth: 1
             }]
         },
@@ -250,10 +220,10 @@ $conn->close();
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($Bar_Type_Weight)?>,
+            labels: <?php echo json_encode(array_column($Weight, 'type_weight'))?>,
             datasets: [{
                 label: ['Résumé Poids'],
-                data: <?php echo json_encode($Bar_Weight_count)?>,
+                data: <?php echo json_encode(array_column($Weight, 'count'))?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(255, 159, 64, 0.2)',

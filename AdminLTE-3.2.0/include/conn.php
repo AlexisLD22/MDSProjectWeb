@@ -1,16 +1,17 @@
 <?php
+class Connexion {
 
-$host = "localhost";
-$username = "root";
-$password = "root";
-$database = "toiletagecanin";
+    public $host = "localhost";
+    public $username = "root";
+    public $password = "root";
+    public $database = "toiletagecanin";
+    public $conn;
 
-// Connexion avec la base de données
-$conn = new mysqli($host, $username, $password, $database);
-
-// On vérifie si la connexion s'est sans soucis.
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+    function __construct() {
+        $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
+        if ($this->conn->connect_error) {
+            die("Database connection failed: " . $conn->connect_error);
+        }
+    }
 }
-
 ?>
