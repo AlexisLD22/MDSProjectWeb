@@ -1,5 +1,5 @@
 <?php
-    session_start();
+require_once 'include/session.php';
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->

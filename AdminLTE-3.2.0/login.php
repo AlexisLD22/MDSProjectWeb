@@ -1,5 +1,4 @@
 <?php
-
 require_once 'include/conn.php';
 require_once 'include/class/users.php';
 
@@ -28,6 +27,5 @@ if (isset($_POST['login'])) {
         <?php endif; ?> <br>
         <input type="submit" name="login" value="Login">
     </form>
-
 </body>
 </html>

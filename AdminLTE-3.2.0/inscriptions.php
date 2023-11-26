@@ -1,5 +1,4 @@
 <?php
-
 require_once 'include/session.php';
 require_once 'include/class/customers.php';
 require_once 'include/class/animals.php';
