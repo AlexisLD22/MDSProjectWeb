@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/conn.php';
-
 class User {
     
     public $connexion;
@@ -57,7 +55,7 @@ class User {
             exit();
         } else {
             // Login failed
-            $error_message = "Login failed. Please check your email and password.";
+            $_SESSION["error_message"] = "Login failed. Please check your email and password.";
             // Add error handling here (e.g., set $error_message and display it in the form)
         }
         $stmt->close();

@@ -1,5 +1,7 @@
 <?php
 require_once 'include/session.php';
+require_once 'include/conn.php';
+
 require_once 'include/class/services.php';
 require_once 'include/class/users.php';
 require_once 'include/class/appointments.php';
@@ -120,8 +122,8 @@ $calendar = $a_c->getCalendar();
                       <div class="input-group">
                         <button type="submit" name="Appointment" class="btn btn-primary">Ajouter le rendez vous</button>
                       </div>
-                      <?php if (isset($error_message)) : ?>
-                          <div class="error-message"><?php echo $error_message; ?></div>
+                      <?php if (isset($_SESSION["error_message"])) : ?>
+                          <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
                       <?php endif; ?>
                     </div>
                     <!-- /input-group -->

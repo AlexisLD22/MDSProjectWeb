@@ -1,5 +1,6 @@
 <?php
 require_once 'include/conn.php';
+
 require_once 'include/class/users.php';
 
 if (isset($_POST['login'])) {
@@ -22,8 +23,8 @@ if (isset($_POST['login'])) {
         <input type="password" name="password" required><br><br>
 
         <!-- Error message div -->
-        <?php if (isset($error_message)) : ?>
-            <div class="error-message"><?php echo $error_message; ?></div>
+        <?php if (isset($_SESSION["error_message"])) : ?>
+            <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
         <?php endif; ?> <br>
         <input type="submit" name="login" value="Login">
     </form>

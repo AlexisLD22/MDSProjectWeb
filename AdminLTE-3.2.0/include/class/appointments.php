@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/conn.php';
-
 class Appointment {
     
     public $connexion;
@@ -57,6 +55,72 @@ class Appointment {
         return $result->num_rows === 1;
     }
 
+    public function IsDateValid($start, $end) {
+        // Mise en forme des dates pour la bdd
+        $dateTime_start = DateTime::createFromFormat('Y-m-d\TH:i', $start);
+        $dateTime_end = DateTime::createFromFormat('Y-m-d\TH:i', $end);
+    
+        // Check if the DateTime objects are valid
+        if ($dateTime_start === false || $dateTime_end === false) {
+            return array(
+                'valid' => false,
+                'reason' => "Format de date invalide."
+            );
+        }
+    
+        // Check if the start date is before the end date
+        if ($dateTime_start >= $dateTime_end) {
+            return array(
+                'valid' => false,
+                'reason' => "La date de début doit être antérieure à la date de fin."
+            );
+        }
+    
+        // Check if the years are between 2020 and 2100
+        if ($dateTime_start->format('Y') < 2020 || $dateTime_start->format('Y') > 2100 ||
+            $dateTime_end->format('Y') < 2020 || $dateTime_end->format('Y') > 2100) {
+            
+            return array(
+                'valid' => false,
+                'reason' => "L'année doit être comprise entre 2020 et 2100."
+            );
+        }
+    
+        // Check if the duration is between 1 hour and 2 hours
+        $interval = $dateTime_start->diff($dateTime_end);
+        $durationInMinutes = $interval->h * 60 + $interval->i;
+    
+        if ($durationInMinutes < 60 || $durationInMinutes > 120) {
+            return array(
+                'valid' => false,
+                'reason' => "La durée doit être comprise entre 1 heure et 2 heures."
+            );
+        }
+    
+        // Check if the start time is after 10 AM and the end time is before 6 PM
+        $startTime = $dateTime_start->format('H:i');
+        $endTime = $dateTime_end->format('H:i');
+        if ($startTime < '10:00' || $endTime > '18:00') {
+            return array(
+                'valid' => false,
+                'reason' => "L'heure de début doit être après 10h et l'heure de fin doit être avant 18h."
+            );
+        }
+    
+        // Format the dates for the database
+        $date_start = $dateTime_start->format('Y-m-d H:i:s');
+        $date_end = $dateTime_end->format('Y-m-d H:i:s');
+    
+        // Return an array with the validity status and formatted date strings
+        return array(
+            'valid' => true,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'reason' => ""
+        );
+    }
+    
+
     public function AddAppointment($mail, $name, $service, $user, $date_start, $date_end, $is_paid) {
         // Récupération de l'id de l'animal :
         $a = new Animal();
@@ -71,32 +135,23 @@ class Appointment {
         $user_u = $u->getByName($user);
         $userId = $user_u->id;
 
-        // Mise en forme des date pour la bdd
-        $dateTime_start = DateTime::createFromFormat('Y-m-d\TH:i', $date_start);
-        $dateTime_end = DateTime::createFromFormat('Y-m-d\TH:i', $date_end);
-
-        if ($dateTime_start && $dateTime_start->format('Y') >= 2000 && $dateTime_start->format('Y') <= 2050 && 
-            $dateTime_end && $dateTime_end->format('Y') >= 2000 && $dateTime_end->format('Y') <= 2050) {
-                $date_start = $dateTime_start->format('Y-m-d H:i:s');
-                $date_end = $dateTime_end->format('Y-m-d H:i:s');
-            }
+        $dateValidationResult = $this->IsDateValid($date_start, $date_end);
 
         // L'employée est-il capable de faire le rendez-vous demander ?
-        if ($this->IsAble($user, $service) && $Animal_a->IslInk($name, $mail)) {
-            $stmt = $this->connexion->conn->prepare("INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, service_id) 
-                                                    VALUES (?, ?, ?, ?, ?, ?);");
-            $stmt->bind_param("ssssss", $date_start, $date_end, $is_paid, $userId, $AnimalId, $serviceId);
+        if ($dateValidationResult["valid"] && $this->IsAble($user, $service) && $Animal_a->IslInk($name, $mail)) {
+            $stmt = $this->connexion->conn->prepare("INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, service_id) VALUES (?, ?, ?, ?, ?, ?);");
+            $stmt->bind_param("ssssss", $dateValidationResult["date_start"], $dateValidationResult["date_end"], $is_paid, $userId, $AnimalId, $serviceId);
             $stmt->execute();
             $stmt->close();
-        } elseif ($Animal_a->IslInk($name, $mail)) {
-            $error_message = "L'employé n'a pas les compétences de faire la tâche demandée";
-            echo($error_message);
+            $_SESSION["error_message"] = $dateValidationResult["reason"];
+        } elseif ($dateValidationResult["valid"] && $this->IsAble($user, $service)) {
+            $_SESSION["error_message"] = "Il semblerait que le client ou l'animal n'existe pas";
+        } elseif ($dateValidationResult["valid"] && $Animal_a->IslInk($name, $mail)) {
+            $_SESSION["error_message"] = "L'employé n'a pas les compétences de faire la tâche demandée";
         } else {
-            $error_message = "Il semblerait que le client ou l'animal n'existe pas";
-            echo($error_message);
+            $_SESSION["error_message"] = $dateValidationResult["reason"];
         }
     }
-    // Inside the Appointment class in appointments.php
 
     public function getCalendar() {
         $calendarQuery = mysqli_query($this->connexion->conn, "SELECT a.id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");

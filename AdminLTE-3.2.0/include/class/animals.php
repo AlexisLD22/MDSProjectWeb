@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/conn.php';
-
 class Animal {
     
     public $connexion;
@@ -151,7 +149,7 @@ class Animal {
                 $error_message1 = "Invalid input data.";
             }
         } else {
-            $error_message1 = "Le client existe déjà.";
+            $error_message1 = "Le chien existe déjà.";
         }
     }
     

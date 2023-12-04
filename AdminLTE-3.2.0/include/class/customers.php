@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/session.php';
-require_once 'include/conn.php';
-
 class Customer {
     
     public $connexion;
