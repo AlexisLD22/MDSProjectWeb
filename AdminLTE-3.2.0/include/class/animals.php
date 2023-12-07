@@ -1,4 +1,6 @@
 <?php
+require_once 'include/conn.php';
+require_once 'include/class/customers.php';
 
 class Animal {
     
@@ -48,7 +50,7 @@ class Animal {
         }
         return $animals;
     }
-    
+
     public function getAvgWeight() {
         $avgWeightResult = mysqli_query($this->connexion->conn, "SELECT ROUND(AVG(weight)) AS average_weight FROM animals;");
         if (!$avgWeightResult) {
@@ -74,7 +76,7 @@ class Animal {
         }
         return $breedData;
     }
-    
+
     public function getHeightData() {
         $query = "SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;";
         $result = mysqli_query($this->connexion->conn, $query);
@@ -91,7 +93,7 @@ class Animal {
         }
         return $HeightData;
     }
-    
+
     public function getCapabilitiesData() {
         $query = "SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;";
         $result = mysqli_query($this->connexion->conn, $query);
@@ -108,7 +110,7 @@ class Animal {
         }
         return $CapabilitiesData;
     }
-    
+
     public function getWeightData() {
         $query = "SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;";
         $result = mysqli_query($this->connexion->conn, $query);
@@ -125,7 +127,7 @@ class Animal {
         }
         return $WeightData;
     }
-    
+
     public function Exist($name, $mail) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM animals AS a INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = ? AND c.mail = ?;");
         $stmt->bind_param("ss", $name, $mail);
@@ -134,7 +136,7 @@ class Animal {
         $stmt->close();
         return $result->num_rows === 1;
     }
-    
+
     public function AddAnimal($name, $breed, $height, $weight, $age, $mail, $commentary) {
         if ($this->Exist($name, $mail) === false) {
             $c = new Customer();
@@ -152,7 +154,7 @@ class Animal {
             $error_message1 = "Le chien existe déjà.";
         }
     }
-    
+
     public function getByNameAndMail($name, $mail) {
         $stmt = $this->connexion->conn->prepare("SELECT a.id, a.name, a.breed, a.age, a.weight, a.height, a.commentary, a.customer_id FROM animals as a INNER JOIN customers as c on c.id = a.customer_id WHERE c.mail = ? AND a.name = ?; ");
         $stmt->bind_param("ss", $mail, $name);
@@ -171,5 +173,4 @@ class Animal {
         return $result->num_rows === 1;
     }
 }
-
 ?>

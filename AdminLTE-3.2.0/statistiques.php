@@ -1,7 +1,5 @@
 <?php
 require_once 'include/session.php';
-require_once 'include/conn.php';
-
 require_once 'include/class/animals.php';
 
 $a = new Animal();

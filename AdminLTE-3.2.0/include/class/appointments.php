@@ -1,4 +1,8 @@
 <?php
+require_once 'include/conn.php';
+require_once 'include/class/animals.php';
+require_once 'include/class/services.php';
+require_once 'include/class/users.php';
 
 class Appointment {
     
@@ -120,7 +124,6 @@ class Appointment {
         );
     }
     
-
     public function AddAppointment($mail, $name, $service, $user, $date_start, $date_end, $is_paid) {
         // Récupération de l'id de l'animal :
         $a = new Animal();
