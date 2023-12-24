@@ -52,5 +52,14 @@ class Service {
         $ServiceData = $result->fetch_assoc();
         return new Service($ServiceData);
     }
+    
+    public function getById($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM services WHERE id = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $ServiceData = $result->fetch_assoc();
+        return new Service($ServiceData);
+    }
 }
 ?>

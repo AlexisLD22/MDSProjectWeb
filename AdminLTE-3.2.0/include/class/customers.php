@@ -88,5 +88,14 @@ class Customer {
             $error_message1 = "Le client existe déjà.";
         }
     }
+
+    public function getById($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE id = ?;");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $CustomerData = $result->fetch_assoc();
+        return new Customer($CustomerData);
+    }
 }
 ?>

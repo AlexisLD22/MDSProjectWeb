@@ -31,34 +31,66 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <a href="inscriptions.php" class="nav-link">
-            <i class="nav-icon fas fa-edit"></i>
-            <p>Inscriptions</p>
-          </a>
-          <!--DataTable-->
-          <a href="data.php" class="nav-link">
-            <i class="nav-icon fas fa-table"></i>
-            <p>DataTables</p>
-          </a>
-          <a href="calendar.php" class="nav-link">
-            <i class="nav-icon far fa-calendar-alt"></i>
-            <p>
-              Calendar
-            </p>
-          </a>
-          <a href="listings.php" class="nav-link">
-            <i class="nav-icon fas fa-book"></i>
-            <p>Listing</p>
-          </a>
-          <a href="statistiques.php" class="nav-link">
-            <i class="nav-icon fas fa-chart-pie"></i>
-            <p>Statistiques</p>
-          </a>
-          <?php if ($_SESSION["is_admin"]): ?>
-            <a href="admin.php" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
-              <p>Admin</p>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+              <p>
+                Inscriptions
+                <i class="fas fa-angle-left right"></i>
+              </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="inscriptions.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Client</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="inscriptions.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add animal</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- <li>
+            <a href="inscriptions.php" class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+              <p>Inscriptions</p>
+            </a>
+          </li> -->
+          <li>
+            <a href="data.php" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>DataTables</p>
+            </a>
+          </li>
+          <li>
+            <a href="calendar.php" class="nav-link">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>Calendar</p>
+            </a>
+          </li>
+          <li>
+            <a href="listings.php" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>Listing</p>
+            </a>
+          </li>
+          <li>
+            <a href="statistiques.php" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>Statistiques</p>
+            </a>
+          </li>
+          <?php if ($_SESSION["is_admin"]): ?>
+            <li>
+              <a href="admin.php" class="nav-link">
+                  <i class="nav-icon fas fa-columns"></i>
+                <p>Admin</p>
+              </a>
+            </li>
           <?php endif ?>
         </ul>
       </nav>

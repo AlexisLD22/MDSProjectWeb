@@ -172,5 +172,14 @@ class Animal {
         $stmt->close();
         return $result->num_rows === 1;
     }
+
+    public function getById($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals WHERE id= ?;");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $AnimalData = $result->fetch_assoc();
+        return new Animal($AnimalData);
+    }
 }
 ?>

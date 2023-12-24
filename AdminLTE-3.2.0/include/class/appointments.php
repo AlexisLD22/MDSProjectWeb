@@ -50,6 +50,15 @@ class Appointment {
         return $appointments;
     }
 
+    public function getById($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM appointments WHERE id=?;");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $appointmentData = $result->fetch_assoc();
+        return new Appointment($appointmentData);
+    }
+
     public function IsAble($user, $service) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM users as u INNER JOIN capabilities as c on c.user_id = u.id INNER JOIN services as s on s.id = c.service_id WHERE CONCAT(u.firstname,' ',u.lastname) = ? AND s.name = ?;");
         $stmt->bind_param("ss", $user, $service);
@@ -157,7 +166,7 @@ class Appointment {
     }
 
     public function getCalendar() {
-        $calendarQuery = mysqli_query($this->connexion->conn, "SELECT a.id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");
+        $calendarQuery = mysqli_query($this->connexion->conn, "SELECT a.id as id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");
         $calendar = [];
         while ($row = mysqli_fetch_assoc($calendarQuery)) {
             $event = [
@@ -165,12 +174,53 @@ class Appointment {
                 'start' => $row['start'],
                 'end' => $row['end'],
                 'color' => $row['is_paid'] ? 'green' : 'red', // Adjust color based on is_paid value
+                'url' => 'appointmentView.php?id=' . $row['id'], // Récupère l'id & le met dans un lien
             ];
             $calendar[] = $event;
         }
         return json_encode($calendar);
     }
 
-}
+    public function announceDate($dateString) {
+        $date = new DateTime($dateString);
 
+        // Define a mapping of English to French month names
+        $monthTranslations = [
+            'January' => 'janvier',
+            'February' => 'février',
+            'March' => 'mars',
+            'April' => 'avril',
+            'May' => 'mai',
+            'June' => 'juin',
+            'July' => 'juillet',
+            'August' => 'août',
+            'September' => 'septembre',
+            'October' => 'octobre',
+            'November' => 'novembre',
+            'December' => 'décembre',
+        ];
+    
+        // Define a mapping of English to French day names
+        $dayTranslations = [
+            'Monday' => 'lundi',
+            'Tuesday' => 'mardi',
+            'Wednesday' => 'mercredi',
+            'Thursday' => 'jeudi',
+            'Friday' => 'vendredi',
+            'Saturday' => 'samedi',
+            'Sunday' => 'dimanche',
+        ];
+    
+        // Format the date for announcement with manual translations
+        $formattedDate = strtr(
+            $date->format('l j F Y \à G\hi'),
+            array_merge($monthTranslations, $dayTranslations)
+        );
+    
+        // Create the announcement sentence
+        $announcement = $formattedDate;
+    
+        return $announcement;
+    }
+}
 ?>
