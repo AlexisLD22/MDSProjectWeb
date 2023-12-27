@@ -180,10 +180,10 @@ class Appointment {
         }
         return json_encode($calendar);
     }
-
+    
     public function announceDate($dateString) {
         $date = new DateTime($dateString);
-
+        
         // Define a mapping of English to French month names
         $monthTranslations = [
             'January' => 'janvier',
@@ -221,6 +221,28 @@ class Appointment {
         $announcement = $formattedDate;
     
         return $announcement;
+    }
+
+    public function ChangeAppointment($id, $service, $user, $date_start, $date_end, $is_paid, $userId) {
+        
+        $dateValidationResult = $this->IsDateValid($date_start, $date_end);
+        
+        // Récupération de l'id du service :
+        $s = new Service();
+        $service_s = $s->getByName($service);
+        $serviceId = strval($service_s->id);
+        
+        if ($dateValidationResult["valid"] && $this->IsAble($user, $service)) {
+            $stmt = $this->connexion->conn->prepare("UPDATE appointments SET service_id = ?, user_id = ?, date_start = ?, date_end = ?, is_paid = ? WHERE id = ?;");
+            $stmt->bind_param("ssssss", $serviceId, $userId, $dateValidationResult["date_start"], $dateValidationResult["date_end"], $is_paid, $id);
+            $stmt->execute();
+            $stmt->close();
+            $_SESSION["error_message"] = "";
+        } elseif ($dateValidationResult["valid"]) {
+            $_SESSION["error_message"] = "L'employé n'a pas les compétences de faire la tâche demandée du service " . $service;
+        } else {
+            $_SESSION["error_message"] = $dateValidationResult["reason"];
+        }
     }
 }
 ?>

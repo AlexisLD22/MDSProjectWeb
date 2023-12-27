@@ -113,7 +113,7 @@ $customerData = $c->getById($animalData->customer_id);
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <form method="post" action="profileEdit.php">
+                      <form method="post" action="<?= 'appointmentEdit.php?id='. $appointmentId?>">
                         <div class="user-block">
                           <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
                           <span class="username">
@@ -136,11 +136,14 @@ $customerData = $c->getById($animalData->customer_id);
                             <dt class="col-sm-4">Prénom et nom du propriétaire</dt>
                             <dd class="col-sm-8"><?= $customerData->firstname . ' ' . $customerData->lastname?></dd>
                             
+                            <dt class="col-sm-4">Nom de l'animal</dt>
+                            <dd class="col-sm-8"><?= $animalData->name?></dd>
+                            
                             <dt class="col-sm-4">Téléphone du propriétaire</dt>
                             <dd class="col-sm-8"><?= $customerData->telephone?></dd>
                             
-                            <dt class="col-sm-4">Nom de l'animal</dt>
-                            <dd class="col-sm-8"><?= $animalData->name?></dd>
+                            <dt class="col-sm-4">Nom de l'employé</dt>
+                            <dd class="col-sm-8"><?= $userData->firstname . ' ' . $userData->lastname?></dd>
                             
                             <dt class="col-sm-4">Service</dt>
                             <dd class="col-sm-8"><?= $serviceData->name?></dd>
@@ -155,7 +158,7 @@ $customerData = $c->getById($animalData->customer_id);
                             <dd class="col-sm-8"><?= $appointmentData->is_paid ? "Vrai" : "Faux" ?></dd>
                           </dl>
                         </div>
-                        <button type="submit" name="Edit" class="btn btn-primary btn-block"> <b>Changer les informations</b></button>
+                        <button type="submit" name="Edit" class="btn btn-primary btn-block"><b>Changer les informations</b></button>
                       </form>
                     </div>
                   </div>

@@ -76,7 +76,7 @@ $calendar = $a_c->getCalendar();
                   <h3 class="card-title">Ajout d'un rendez-vous</h3>
                 </div>
                 <div class="card-body">
-                  <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                  <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                     <div class="form-group">
                       <label for="InputMail">Email</label>
                       <input type="Email" class="form-control" name="InputMail" placeholder="adresse mail">

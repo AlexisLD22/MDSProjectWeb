@@ -9,7 +9,6 @@ $userAbilities = $u->getCapabilityById($_POST['user_id']);
 
 $s = new Service();
 $services = $s->getServices();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
