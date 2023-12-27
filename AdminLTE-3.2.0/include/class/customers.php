@@ -80,12 +80,13 @@ class Customer {
                 $stmt = $this->connexion->conn->prepare("INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("ssssss", $firstname, $lastname, $mail, $telephone, $postal_adress, $commentary);
                 $stmt->execute();
-                $stmt->close();  // Close the statement after execution
+                $stmt->close();
+                $_SESSION["error_message_InscriptionCustomer"] = NULL;
             } else {
-                $error_message1 = "Invalid input data.";
+                $_SESSION["error_message_InscriptionCustomer"] = "Invalid input data.";
             }
         } else {
-            $error_message1 = "Le client existe déjà.";
+            $_SESSION["error_message_InscriptionCustomer"] = "Le client existe déjà.";
         }
     }
 

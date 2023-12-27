@@ -41,13 +41,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="inscriptions.php" class="nav-link">
+                <a href="inscriptionClient.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add Client</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inscriptions.php" class="nav-link">
+                <a href="inscriptionAnimal.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add animal</p>
                 </a>

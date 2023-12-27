@@ -147,11 +147,12 @@ class Animal {
                 $stmt->bind_param("sssssss", $name, $breed, $age, $weight, $height, $commentary, $CustomerId);
                 $stmt->execute();
                 $stmt->close();
+                $_SESSION["error_message_InscriptionAnimal"] = NULL;
             } else {
-                $error_message1 = "Invalid input data.";
+                $_SESSION["error_message_InscriptionAnimal"] = "Invalid input data.";
             }
         } else {
-            $error_message1 = "Le chien existe déjà.";
+            $_SESSION["error_message_InscriptionAnimal"] = "Le chien existe déjà.";
         }
     }
 
