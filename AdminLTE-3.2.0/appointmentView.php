@@ -156,6 +156,9 @@ $customerData = $c->getById($animalData->customer_id);
                             
                             <dt class="col-sm-4">Etat du payement </dt>
                             <dd class="col-sm-8"><?= $appointmentData->is_paid ? "Vrai" : "Faux" ?></dd>
+                            
+                            <dt class="col-sm-4">Prix</dt>
+                            <dd class="col-sm-8"><?= $serviceData->price?> €</dd>
                           </dl>
                         </div>
                         <button type="submit" name="Edit" class="btn btn-primary btn-block"><b>Changer les informations</b></button>
