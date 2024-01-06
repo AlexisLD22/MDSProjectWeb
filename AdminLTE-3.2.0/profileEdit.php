@@ -3,33 +3,64 @@ require_once 'include/session.php';
 require_once 'include/class/users.php';
 require_once 'include/class/services.php';
 
-$u = new User();
-$userData = $u->getById($_POST['user_id']);
-$userAbilities = $u->getCapabilityById($_POST['user_id']);
+if(isset($_GET['id'])) {
+  $userId = $_GET['id'];
+  $info = "Update";
+} else {
+  $info = "Creation";
+}
 
+// Récupération des services pour les afficher
 $s = new Service();
 $services = $s->getServices();
 
-if (isset($_POST['Confirmation'])) {
-  $capabilities = [
-    "c1" => isset($_POST["Capability1"]) == 1 ? 1 : 0,
-    "c2" => isset($_POST["Capability2"]) == 1 ? 1 : 0,
-    "c3" => isset($_POST["Capability3"]) == 1 ? 1 : 0,
-    "c4" => isset($_POST["Capability4"]) == 1 ? 1 : 0
-  ];
-  $is_admin = isset($_POST["is_admin"]) == 1 ? 1 : 0;
-  $u->update(strval($userData->id), strval($is_admin), $_POST["firstname"], $_POST["lastname"], $capabilities, $_POST["telephone"], $_POST["mail"], $_POST["postal_adress"]);
+if ($info == "Update") {
+  
+  $u = new User();
+  $userData = $u->getById($userId);
+  $userAbilities = $u->getCapabilityById($userId);
+  
+  if (isset($_POST['Confirmation'])) {
+
+    $capabilities = [
+      "c1" => isset($_POST["Capability1"]) == 1 ? 1 : 0,
+      "c2" => isset($_POST["Capability2"]) == 1 ? 1 : 0,
+      "c3" => isset($_POST["Capability3"]) == 1 ? 1 : 0,
+      "c4" => isset($_POST["Capability4"]) == 1 ? 1 : 0
+    ];
+    $is_admin = isset($_POST["is_admin"]) == 1 ? 1 : 0;
+    $u->update(strval($userData->id), strval($is_admin), $_POST["firstname"], $_POST["lastname"], $capabilities, $_POST["telephone"], $_POST["mail"], $_POST["postal_adress"]);
+    header("Location: admin.php");
+  }
+} elseif ($info == "Creation") {
+
+  $u = new User();
+  $userData = $u->getById($userId);
+  $userAbilities = $u->getCapabilityById($userId);
+
+  if (isset($_POST['Confirmation'])) {
+    $capabilities = [
+      "c1" => isset($_POST["Capability1"]) == 1 ? 1 : 0,
+      "c2" => isset($_POST["Capability2"]) == 1 ? 1 : 0,
+      "c3" => isset($_POST["Capability3"]) == 1 ? 1 : 0,
+      "c4" => isset($_POST["Capability4"]) == 1 ? 1 : 0
+    ];
+    $is_admin = isset($_POST["is_admin"]) == 1 ? 1 : 0;
+    $u->createUser(strval($is_admin), $_POST["firstname"], $_POST["lastname"], $capabilities, $_POST["telephone"], $_POST["mail"], $_POST["postal_adress"], $_POST["password"]);
+    header("Location: admin.php");
+  }
+} else {
   header("Location: admin.php");
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | User Profile</title>
-
-  <!-- Google Font: Source Sans Pro -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3 | User Profile</title>
+    
+    <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
@@ -88,7 +119,7 @@ if (isset($_POST['Confirmation'])) {
                         </h3>
                       </div>
                       <!-- /.card-header -->
-                      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                      <form method="POST" action="">
                         <div class="card-body">
                           <dl class="row">
                           <input type="hidden" name="user_id" value="<?= $userData->id?>">
@@ -101,7 +132,6 @@ if (isset($_POST['Confirmation'])) {
                               <input type='checkbox' name='is_admin'>
                             <?php endif ?>
                           </dd>
-                          
                           
                           <dt class="col-sm-4">Prénom</dt>
                           <dd class="col-sm-8">
@@ -136,16 +166,24 @@ if (isset($_POST['Confirmation'])) {
                           <dd class="col-sm-8">
                             <input type="text" name="telephone" class="col-sm-8" value="<?= $userData->telephone?>">
                           </dd>
-
-                          <dt class="col-sm-4">Adresse mail</dt>
-                          <dd class="col-sm-8">
-                            <input type="text" name="mail" class="col-sm-8" value="<?= $userData->mail?>">
-                          </dd>
                           
                           <dt class="col-sm-4">Adresse postal</dt>
                           <dd class="col-sm-8">
                             <input type="text" name="postal_adress" class="col-sm-8" value="<?= $userData->postal_adress?>">
                           </dd>
+                          
+                          <dt class="col-sm-4">Adresse mail</dt>
+                          <dd class="col-sm-8">
+                            <input type="text" name="mail" class="col-sm-8" value="<?= $userData->mail?>">
+                          </dd>
+                          
+                          <?php if ($info == "Creation"): ?>
+                            <dt class="col-sm-4">Mot de passe</dt>
+                            <dd class="col-sm-8">
+                              <input type="password" name="password" class="col-sm-8">
+                            </dd>
+                          <?php endif ?>
+
                           </dl>
                         </div>
                         <button type="submit" name="Confirmation" class="btn btn-primary btn-block"><b>Confirmations des informations</b</button>

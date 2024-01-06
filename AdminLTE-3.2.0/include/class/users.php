@@ -152,15 +152,40 @@ class User {
         $stmtCapability = $this->connexion->conn->prepare("DELETE FROM capabilities WHERE user_id = ?;");
         $stmtAppointment = $this->connexion->conn->prepare("DELETE FROM appointments WHERE user_id = ?;");
         $stmtUser = $this->connexion->conn->prepare("DELETE FROM users WHERE id = ?;");
+
         $stmtCapability->bind_param("s", $id);
         $stmtAppointment->bind_param("s", $id);
         $stmtUser->bind_param("s", $id);
+
         $stmtCapability->execute();
         $stmtAppointment->execute();
         $stmtUser->execute();
-        
     }
+    
+    public function createUser($is_admin, $firstname, $lastname, $capabalities, $telephone, $mail, $postal_adress, $password) {
+        $stmt = $this->connexion->conn->prepare("INSERT INTO users (is_admin, firstname, lastname, telephone, mail, postal_adress, password) VALUES (?, ?, ?, ?, ?, ?, ?);");
+        $stmt->bind_param("sssssss", $is_admin, $firstname, $lastname, $telephone, $mail, $postal_adress, $password);
+        $stmt->execute();
 
+        $User = $firstname . " " . $lastname;
+        $u = new User();
+        $userData = $u->getByName($User);
+
+        $s = new Service();
+        $services = $s->getServices();
+        $index = 0;
+        foreach ($capabalities as $capability) {
+            $serviceData = $s->getByName($services[$index]);
+            // Use a comparison operator (==) instead of assignment (=)
+            if ($capability == "1") {
+                $stmtAddCapability = $this->connexion->conn->prepare("INSERT INTO capabilities (user_id, service_id) VALUES (?, ?); ");
+                $stmtAddCapability->bind_param("ss", $userData->id, $serviceData->id);
+                $stmtAddCapability->execute();
+            }
+            $index = $index + 1;
+        }
+    }
+    
     public function update($id, $is_admin, $firstname, $lastname, $capabalities, $telephone, $mail, $postal_adress) {
         // Requête pour changer les informations dans la table users :
         $stmt = $this->connexion->conn->prepare("UPDATE users SET is_admin = ?, firstname = ?, lastname = ?, telephone = ?, mail = ?, postal_adress = ? WHERE id = ?;");
@@ -177,7 +202,6 @@ class User {
         $index = 0;
         foreach ($capabalities as $capability) {
             $serviceData = $s->getByName($services[$index]);
-            // Use a comparison operator (==) instead of assignment (=)
             if ($capability == "1") {
                 $stmtAddCapability = $this->connexion->conn->prepare("INSERT INTO capabilities (user_id, service_id) VALUES (?, ?); ");
                 $stmtAddCapability->bind_param("ss", $id, $serviceData->id);

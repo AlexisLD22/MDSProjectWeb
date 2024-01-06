@@ -2,13 +2,34 @@
 require_once 'include/session.php';
 require_once 'include/class/users.php';
 require_once 'include/class/services.php';
+require_once 'include/class/appointments.php';
 
+if(isset($_GET['id'])) {
+  $userId = $_GET['id'];
+} else {
+  header("Location: admin.php");
+}
+// $a->announceDate($appointment->date_start)
 $u = new User();
-$userData = $u->getById($_POST['user_id']);
-$userAbilities = $u->getCapabilityById($_POST['user_id']);
+$userData = $u->getById($userId);
+$userAbilities = $u->getCapabilityById($userId);
 
 $s = new Service();
 $services = $s->getServices();
+
+$a = new Appointment();
+$appointments = $a->getAll();
+
+$currentDate = getdate();
+$currentDateFormated = sprintf(
+    "%04d-%02d-%02d %02d:%02d:%02d",
+    $currentDate["year"],
+    $currentDate["mon"],
+    $currentDate["mday"],
+    $currentDate["hours"],
+    $currentDate["minutes"],
+    $currentDate["seconds"]
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,18 +77,13 @@ $services = $s->getServices();
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle"
-                       src="dist/img/user4-128x128.jpg"
-                       alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
                 </div>
-
                 <h3 class="profile-username text-center"><?= $userData->firstname . ' ' . $userData->lastname?></h3>
-
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
                     <b>Téléphone</b> <a class="float-right"><?= $userData->telephone?></a>
@@ -80,9 +96,22 @@ $services = $s->getServices();
                   </li>
                 </ul>
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
+            
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <h3 class="profile-username text-center">Listes des prochains rendez-vous</h3>
+                <ul class="list-group list-group-unbordered mb-3">
+                  <?php foreach($appointments as $appointment): ?>
+                    <?php if ($currentDateFormated < $appointment->date_start && intval($appointment->user_id) === $userData->id): ?>
+                      <li class="list-group-item">
+                        <?= $a->announceDate($appointment->date_start)?>
+                      </li>
+                    <?php endif; ?>
+                  <?php endforeach ?>
+                </ul>
+              </div>
+            </div>
           </div>
           <!-- /.col -->
           <div class="col-md-9">

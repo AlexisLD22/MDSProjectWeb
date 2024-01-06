@@ -77,14 +77,17 @@ $calendar = $a_c->getCalendar();
                 </div>
                 <div class="card-body">
                   <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
+                  
                     <div class="form-group">
                       <label for="InputMail">Email</label>
                       <input type="Email" class="form-control" name="InputMail" placeholder="adresse mail">
                     </div>
+                    
                     <div class="form-group">
                         <label for="InputName">Nom de l'animal</label>
                         <input type="Text" class="form-control" name="InputName" placeholder="Nom de l'animal">
                     </div>
+                    
                     <div class="form-group">
                       <label for="InputService">Raison du rendez-vous</label>
                       <select class="form-control" name="InputService">
@@ -95,6 +98,7 @@ $calendar = $a_c->getCalendar();
                           ?>
                       </select>
                     </div>
+                    
                     <div class="form-group">
                       <label for="InputUser"> Ajout de l'employé </label>
                       <select class="form-control" name="InputUser">
@@ -105,22 +109,26 @@ $calendar = $a_c->getCalendar();
                           ?>
                       </select>
                     </div>
+                    
                     <div class="form-group">
                         <label for="InputDate1">Date début du rendez-vous</label>
                         <input type="datetime-local" class="form-control" name="InputDate1">
                     </div>
+                    
                     <div class="form-group">
                         <label for="InputDate2">Date fin du rendez-vous</label>
                         <input type="datetime-local" class="form-control" name="InputDate2">
                     </div>
+
                     <div class="form-group row">
                       <label for="InputPaid">Etat du payement :</label>
                       <input type="checkbox" name="InputPaid" value="1">
-                      <div class="input-group">
-                        <button type="submit" name="Appointment" class="btn btn-primary">Ajouter le rendez vous</button>
-                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <button type="submit" name="Appointment" class="btn btn-primary">Ajouter le rendez vous</button>
                       <?php if (isset($_SESSION["error_message"])) : ?>
-                          <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
+                        <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
                       <?php endif; ?>
                     </div>
                     <!-- /input-group -->
