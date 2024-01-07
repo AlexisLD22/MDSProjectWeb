@@ -128,7 +128,7 @@ $calendar = $a_c->getCalendar();
                     <div class="input-group">
                       <button type="submit" name="Appointment" class="btn btn-primary">Ajouter le rendez vous</button>
                       <?php if (isset($_SESSION["error_message"])) : ?>
-                        <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
+                        <div class="error-message"><?= $_SESSION["error_message"]; ?></div>
                       <?php endif; ?>
                     </div>
                     <!-- /input-group -->
@@ -138,7 +138,7 @@ $calendar = $a_c->getCalendar();
             </div>
           </div>
           <!-- /.col -->
-          <input id="event-datas" type="hidden" value='<?php echo($calendar);?>'>
+          <input id="event-datas" type="hidden" value='<?= $calendar;?>'>
           <div class="col-md-9">
             <div class="card card-primary">
               <div class="card-body p-0">

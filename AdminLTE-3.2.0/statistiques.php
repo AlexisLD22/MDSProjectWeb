@@ -139,10 +139,10 @@ $Weight = $a->getWeightData();
     new Chart(document.getElementById('donutChart'),{
             type: 'doughnut',
             data:{
-                labels: <?php echo json_encode(array_column($Dougnhut, 'breed'))?>,
+                labels: <?= json_encode(array_column($Dougnhut, 'breed'))?>,
                 datasets: [{
                 label:'Quantité',
-                data: <?php echo json_encode(array_column($Dougnhut, 'count'))?>,
+                data: <?= json_encode(array_column($Dougnhut, 'count'))?>,
                 backgroundColor: [
                     'rgb(255, 99, 132)', 
                     'rgb(54, 162, 235)',
@@ -161,10 +161,10 @@ $Weight = $a->getWeightData();
     new Chart(document.getElementById('areaChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode(array_column($Height, 'type_height'))?>,
+            labels: <?= json_encode(array_column($Height, 'type_height'))?>,
             datasets: [{
                 label: ['Résumé taille'],
-                data: <?php echo json_encode(array_column($Height, 'count'))?>,
+                data: <?= json_encode(array_column($Height, 'count'))?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(255, 159, 64, 0.2)',
@@ -195,10 +195,10 @@ $Weight = $a->getWeightData();
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
-            labels: <?php echo json_encode(array_column($Capabilites, 'name'))?>,
+            labels: <?= json_encode(array_column($Capabilites, 'name'))?>,
             datasets: [{
                 label: "Nombre d'employés formés pour ce service",
-                data: <?php echo json_encode(array_column($Capabilites, 'count'))?>,
+                data: <?= json_encode(array_column($Capabilites, 'count'))?>,
                 borderWidth: 1
             }]
         },
@@ -218,10 +218,10 @@ $Weight = $a->getWeightData();
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode(array_column($Weight, 'type_weight'))?>,
+            labels: <?= json_encode(array_column($Weight, 'type_weight'))?>,
             datasets: [{
                 label: ['Résumé Poids'],
-                data: <?php echo json_encode(array_column($Weight, 'count'))?>,
+                data: <?= json_encode(array_column($Weight, 'count'))?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(255, 159, 64, 0.2)',

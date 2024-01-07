@@ -80,7 +80,7 @@ $Number_Listing = $c->getCount();
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3><?php echo random_int(10, 75);?></h3>
+                <h3><?= random_int(10, 75);?></h3>
 
                 <p>Ajouter un nouveau client :</p>
               </div>
@@ -95,7 +95,7 @@ $Number_Listing = $c->getCount();
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?php echo $Number_Listing;?></h3>
+                <h3><?= $Number_Listing;?></h3>
 
                 <p>Voir nos Clients :</p>
               </div>
@@ -110,7 +110,7 @@ $Number_Listing = $c->getCount();
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3><?php echo $Number_Stats;?></h3>
+                <h3><?= $Number_Stats;?></h3>
 
                 <p>Voir les statistiques : </p>
               </div>

@@ -156,7 +156,7 @@ if(isset($_POST["Confirmation"])) {
                           </div>
                           <button type="submit" name="Confirmation" class="btn btn-primary btn-block"><b>Confirmations des informations</b></button>
                           <?php if (isset($_SESSION["error_message"])) : ?>
-                              <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
+                            <div class="error-message"><?= $_SESSION["error_message"]; ?></div>
                           <?php endif; ?>
                       </form>
                     </div>

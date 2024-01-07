@@ -13,7 +13,7 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 <body>
-    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <form method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
         <label for="email">Email:</label>
         <input type="email" name="email" required><br><br>
 
@@ -22,7 +22,7 @@ if (isset($_POST['login'])) {
 
         <!-- Error message div -->
         <?php if (isset($_SESSION["error_message"])) : ?>
-            <div class="error-message"><?php echo $_SESSION["error_message"]; ?></div>
+            <div class="error-message"><?= $_SESSION["error_message"]; ?></div>
         <?php endif; ?> <br>
         <input type="submit" name="login" value="Login">
     </form>
