@@ -231,6 +231,10 @@ class Appointment {
         $s = new Service();
         $service_s = $s->getByName($service);
         $serviceId = strval($service_s->id);
+        // Récupération de l'id de l'utilisateur:
+        $u = new User();
+        $user_u = $u->getByName($user);
+        $userId = $user_u->id;
         
         if ($dateValidationResult["valid"] && $this->IsAble($user, $service)) {
             $stmt = $this->connexion->conn->prepare("UPDATE appointments SET service_id = ?, user_id = ?, date_start = ?, date_end = ?, is_paid = ? WHERE id = ?;");

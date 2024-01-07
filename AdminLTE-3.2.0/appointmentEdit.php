@@ -102,8 +102,8 @@ if(isset($_POST["Confirmation"])) {
                         <form method="POST" action="<?= 'appointmentEdit.php?id='. $appointmentId?>">
                           <div class="card-body">
                             <dl class="row">
-                              <input type="hidden" name="user_id" value="<?= $userData->id?>">
-
+                              <input type="hidden" name="user_id" value="<?= $userData->id?>"> 
+                              
                               <dt class="col-sm-4">Prénom et nom du propriétaire</dt>
                               <dd class="col-sm-8"><?= $customerData->firstname . ' ' . $customerData->lastname?></dd>
                             
@@ -113,9 +113,10 @@ if(isset($_POST["Confirmation"])) {
                               <dt class="col-sm-4">Service</dt>
                               <dd class="col-sm-8">
                                 <select class="form-control" name="InputService">
-                                  <?php
+                                    <?php
                                     foreach ($services as $serviceName) {
-                                      echo '<option value="' . $serviceName . '">' . $serviceName . '</option>';
+                                      $selected = ($serviceName == $serviceData->name) ? 'selected' : '';
+                                      echo '<option value="' . $serviceName . '" ' . $selected . '>' . $serviceName . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -124,11 +125,12 @@ if(isset($_POST["Confirmation"])) {
                               <dt class="col-sm-4">Employé</dt>
                               <dd class="col-sm-8">
                                 <select class="form-control" name="InputUser">
-                                  <?php
+                                    <?php
                                     foreach ($users as $userName) {
-                                        echo '<option value="' . $userName . '">' . $userName . '</option>';
+                                      $selected = ($userName == $userData->firstname.' '.$userData->lastname) ? 'selected' : '';
+                                      echo '<option value="' . $userName . '" ' . $selected . '>' . $userName . '</option>';
                                     }
-                                  ?>
+                                    ?>
                                 </select>
                               </dd>
                               
