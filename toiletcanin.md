@@ -2,14 +2,15 @@
 
 Here all the sql query to create the database "ToiletageCanin"
 
-# Creation of the Database :
+# File for creating the database :
+
 ```sql
+-- Creation of the Database :
+
 CREATE DATABASE ToiletageCanin;
-```
 
-# Creation of all the Tables :
+-- Creation of all the Tables :
 
-```sql
 CREATE TABLE customers
 (
 	id int PRIMARY KEY AUTO_INCREMENT,
@@ -115,7 +116,7 @@ INSERT INTO capabilities (user_id, service_id) VALUES
 (5, 4);
 
 INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, service_id) VALUES
-('2023-11-15 14:00:00', '2023-11-15 15:00:00', 0, 4, 3, 1),
-('2023-11-17 10:00:00', '2023-11-17 11:30:00', 1, 2, 1, 2),
-('2023-11-21 15:00:00', '2023-11-21 16:00:00', 1, 5, 4, 4);
+('2024-01-15 14:00:00', '2024-01-15 15:00:00', 0, 4, 3, 1),
+('2024-02-17 10:00:00', '2024-02-17 11:30:00', 1, 2, 1, 2),
+('2024-03-21 15:00:00', '2024-03-21 16:00:00', 1, 5, 4, 4);
 ```
