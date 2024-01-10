@@ -56,6 +56,16 @@ class Customer {
         return new Customer($customerData);
     }
     
+    public function getByName($name) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE CONCAT(firstname,' ',lastname) = ?;");
+        $stmt->bind_param("s", $name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $customerData = $result->fetch_assoc();
+        return new Customer($customerData);
+        
+    }
+
     public function getCount() {
         $CountResult = mysqli_query($this->connexion->conn, "SELECT COUNT(*) as count FROM Customers;");
         if (!$CountResult) {
@@ -97,6 +107,17 @@ class Customer {
         $result = $stmt->get_result();
         $CustomerData = $result->fetch_assoc();
         return new Customer($CustomerData);
+    }
+    
+    public function getNames() {
+        $stmt = $this->connexion->conn->prepare("SELECT CONCAT(firstname,' ',lastname) as name FROM customers");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $customers = [];
+        while ($customerData = $result->fetch_assoc()) {
+            $customers[] = $customerData['name'];
+        }
+        return $customers;
     }
 }
 ?>

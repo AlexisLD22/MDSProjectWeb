@@ -133,10 +133,10 @@ class Appointment {
         );
     }
     
-    public function AddAppointment($mail, $name, $service, $user, $date_start, $date_end, $is_paid) {
+    public function AddAppointment($customer, $name, $service, $user, $date_start, $date_end, $is_paid) {
         // Récupération de l'id de l'animal :
         $a = new Animal();
-        $Animal_a = $a->getByNameAndMail($name, $mail);
+        $Animal_a = $a->getByNameAndCustomer($name, $customer);
         $AnimalId = $Animal_a->id;
         // Récupération de l'id du service :
         $s = new Service();
@@ -150,7 +150,7 @@ class Appointment {
         $dateValidationResult = $this->IsDateValid($date_start, $date_end);
 
         // L'employée est-il capable de faire le rendez-vous demander ?
-        if ($dateValidationResult["valid"] && $this->IsAble($user, $service) && $Animal_a->IslInk($name, $mail)) {
+        if ($dateValidationResult["valid"] && $this->IsAble($user, $service) && $Animal_a->IsLink($name, $customer)) {
             $stmt = $this->connexion->conn->prepare("INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, service_id) VALUES (?, ?, ?, ?, ?, ?);");
             $stmt->bind_param("ssssss", $dateValidationResult["date_start"], $dateValidationResult["date_end"], $is_paid, $userId, $AnimalId, $serviceId);
             $stmt->execute();
@@ -158,7 +158,7 @@ class Appointment {
             $_SESSION["error_message"] = $dateValidationResult["reason"];
         } elseif ($dateValidationResult["valid"] && $this->IsAble($user, $service)) {
             $_SESSION["error_message"] = "Il semblerait que le client ou l'animal n'existe pas";
-        } elseif ($dateValidationResult["valid"] && $Animal_a->IslInk($name, $mail)) {
+        } elseif ($dateValidationResult["valid"] && $Animal_a->IsLink($name, $customer)) {
             $_SESSION["error_message"] = "L'employé n'a pas les compétences de faire la tâche demandée";
         } else {
             $_SESSION["error_message"] = $dateValidationResult["reason"];

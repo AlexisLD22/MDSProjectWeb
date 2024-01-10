@@ -35,12 +35,10 @@ class Service {
         $stmt = $this->connexion->conn->prepare("SELECT name FROM services");
         $stmt->execute();
         $result = $stmt->get_result();
-
         $services = [];
         while ($serviceData = $result->fetch_assoc()) {
             $services[] = $serviceData['name'];
         }
-
         return $services;
     }
     

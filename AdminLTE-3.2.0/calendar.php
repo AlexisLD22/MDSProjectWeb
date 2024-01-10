@@ -1,20 +1,24 @@
 <?php
 require_once 'include/session.php';
-
 require_once 'include/class/services.php';
 require_once 'include/class/users.php';
+require_once 'include/class/animals.php';
 require_once 'include/class/appointments.php';
+require_once 'include/class/customers.php';
 
 $s = new Service();
 $services = $s->getServices();
-
 $u = new User();
 $users = $u->getNames();
+$an = new Animal();
+$animals = $an->getNames();
+$c = new Customer();
+$customers = $c->getNames();
+
 
 if (isset($_POST["Appointment"])) {
   $a = new Appointment();
-  $a->AddAppointment($_POST["InputMail"], $_POST["InputName"], $_POST["InputService"], $_POST["InputUser"], 
-  $_POST["InputDate1"], $_POST["InputDate2"], strlen($_POST["InputPaid"]));
+  $a->AddAppointment($_POST["InputCustomer"], $_POST["InputName"], $_POST["InputService"], $_POST["InputUser"], $_POST["InputDate1"], $_POST["InputDate2"], strlen($_POST["InputPaid"]));
 }
 
 // a_c pour Appointment_Calendar
@@ -36,6 +40,8 @@ $calendar = $a_c->getCalendar();
   <link rel="stylesheet" href="plugins/fullcalendar/main.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- Include the select2 CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -79,13 +85,25 @@ $calendar = $a_c->getCalendar();
                   <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                   
                     <div class="form-group">
-                      <label for="InputMail">Email</label>
-                      <input type="Email" class="form-control" name="InputMail" placeholder="adresse mail">
+                      <label for="InputCustomer">Email</label>
+                      <select class="form-control" name="InputCustomer" id="customerDropdown">
+                        <?php
+                        foreach ($customers as $customersName) {
+                          echo '<option value="' . $customersName . '">' . $customersName . '</option>';
+                        }
+                        ?>
+                      </select>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="InputName">Nom de l'animal</label>
-                        <input type="Text" class="form-control" name="InputName" placeholder="Nom de l'animal">
+
+                    <div class="form-group" style="padding: px">
+                      <label for="InputName">Nom de l'animal</label>
+                      <select class="form-control" name="InputName" id="animalDropdown">
+                        <?php
+                        foreach ($animals as $animalName) {
+                          echo '<option value="' . $animalName . '">' . $animalName . '</option>';
+                        }
+                        ?>
+                      </select>
                     </div>
                     
                     <div class="form-group">
@@ -93,7 +111,7 @@ $calendar = $a_c->getCalendar();
                       <select class="form-control" name="InputService">
                           <?php
                           foreach ($services as $serviceName) {
-                              echo '<option value="' . $serviceName . '">' . $serviceName . '</option>';
+                            echo '<option value="' . $serviceName . '">' . $serviceName . '</option>';
                           }
                           ?>
                       </select>
@@ -104,20 +122,20 @@ $calendar = $a_c->getCalendar();
                       <select class="form-control" name="InputUser">
                           <?php
                           foreach ($users as $userName) {
-                              echo '<option value="' . $userName . '">' . $userName . '</option>';
+                            echo '<option value="' . $userName . '">' . $userName . '</option>';
                           }
                           ?>
                       </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="InputDate1">Date début du rendez-vous</label>
-                        <input type="datetime-local" class="form-control" name="InputDate1">
+                      <label for="InputDate1">Date début du rendez-vous</label>
+                      <input type="datetime-local" class="form-control" name="InputDate1">
                     </div>
                     
                     <div class="form-group">
-                        <label for="InputDate2">Date fin du rendez-vous</label>
-                        <input type="datetime-local" class="form-control" name="InputDate2">
+                      <label for="InputDate2">Date fin du rendez-vous</label>
+                      <input type="datetime-local" class="form-control" name="InputDate2">
                     </div>
 
                     <div class="form-group row">
@@ -176,7 +194,27 @@ $calendar = $a_c->getCalendar();
 <script src="plugins/fullcalendar/main.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<!-- Include the Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 <!-- Page specific script -->
+<style>
+  .select2-container--default .select2-selection--single {
+    line-height: 15px;
+    height: 40px;
+  }
+</style>
+<script>
+  // Initialize Select2 for the animal dropdown
+    $(document).ready(function() {
+        $('#animalDropdown').select2();
+    });
+  // Initialize Select2 for the customer dropdown
+    $(document).ready(function() {
+        $('#customerDropdown').select2();
+    });
+</script>
+<!-- Page specific script for the calendar -->
 <script>
   $(function () {
     /* initialize the calendar

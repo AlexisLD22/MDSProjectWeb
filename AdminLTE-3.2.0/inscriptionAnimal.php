@@ -1,11 +1,14 @@
 <?php
 require_once 'include/session.php';
 require_once 'include/class/animals.php';
+require_once 'include/class/customers.php';
+
+$c = new Customer();
+$customers = $c->getNames();
 
 if (isset($_POST['AO'])) {
   $a = new Animal();
-  $a->AddAnimal($_POST["inputName"], $_POST["inputBreed"], $_POST["InputHeight"], $_POST["InputWeight"], $_POST["InputAge"], $_POST["inputEmail"], $_POST["inputCommentary"]);
-  header("Location : index.php");
+  $a->AddAnimal($_POST["inputName"], $_POST["inputBreed"], $_POST["InputHeight"], $_POST["InputWeight"], $_POST["InputAge"], $_POST["InputCustomer"], $_POST["inputCommentary"]);
 }
 ?>
 <!DOCTYPE html>
@@ -116,12 +119,18 @@ if (isset($_POST['AO'])) {
                     </div>
 
                     <div class="form-group row">
-                      <label for="inputEmail" class="col-sm-3 col-form-label">E-mail du propriétaire</label>
+                      <label for="inputEmail" class="col-sm-3 col-form-label">Nom du propriétaire</label>
                       <div class="input-group col-sm-9">
                         <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                          <span class="input-group-text"><i class="fas fa-font"></i></span>
                         </div>
-                        <input type="Email" class="form-control" name="inputEmail" placeholder="E-mail du propriétaire">
+                        <select class="form-control" name="InputCustomer" id="customerDropdown">
+                          <?php
+                          foreach ($customers as $customersName) {
+                            echo '<option value="' . $customersName . '">' . $customersName . '</option>';
+                          }
+                          ?>
+                        </select>
                       </div>
                     </div>
 
@@ -172,10 +181,18 @@ if (isset($_POST['AO'])) {
 <script src="plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script src="dist/js/adminlte.min.js"></script>
 <script src="dist/js/demo.js"></script>
+<!-- Page specific script -->
+<style>
+  .select2-container--default .select2-selection--single {
+    line-height: 15px;
+    height: 40px;
+  }
+</style>
 <script>
-$(function () {
-  bsCustomFileInput.init();
-});
+  // Initialize Select2 for the customer dropdown
+    $(document).ready(function() {
+        $('#customerDropdown').select2();
+    });
 </script>
 </body>
 </html>

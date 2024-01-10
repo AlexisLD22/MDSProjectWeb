@@ -128,19 +128,19 @@ class Animal {
         return $WeightData;
     }
 
-    public function Exist($name, $mail) {
-        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals AS a INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = ? AND c.mail = ?;");
-        $stmt->bind_param("ss", $name, $mail);
+    public function Exist($name, $customer) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals AS a INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = ? AND CONCAT(c.firstname,' ',c.lastname) = ?;");
+        $stmt->bind_param("ss", $name, $customer);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
         return $result->num_rows === 1;
     }
 
-    public function AddAnimal($name, $breed, $height, $weight, $age, $mail, $commentary) {
-        if ($this->Exist($name, $mail) === false) {
+    public function AddAnimal($name, $breed, $height, $weight, $age, $customer, $commentary) {
+        if ($this->Exist($name, $customer) === false) {
             $c = new Customer();
-            $Customer = $c->getByMail($mail);
+            $Customer = $c->getByName($customer);
             $CustomerId = $Customer->id;
             if (strlen($name) > 0 && strlen($breed) > 0 && strlen($name) <= 45 && strlen($breed) <= 45 && strlen($age) > 0 && strlen($age) <= 3 && strlen($weight) > 0 && strlen($height) > 0 && strlen($weight) <= 3 && strlen($height) <= 3) {
                 $stmt = $this->connexion->conn->prepare("INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES (?, ?, ?, ?, ?, ?, ?);");
@@ -156,18 +156,18 @@ class Animal {
         }
     }
 
-    public function getByNameAndMail($name, $mail) {
-        $stmt = $this->connexion->conn->prepare("SELECT a.id, a.name, a.breed, a.age, a.weight, a.height, a.commentary, a.customer_id FROM animals as a INNER JOIN customers as c on c.id = a.customer_id WHERE c.mail = ? AND a.name = ?; ");
-        $stmt->bind_param("ss", $mail, $name);
+    public function getByNameAndCustomer($name, $customer) {
+        $stmt = $this->connexion->conn->prepare("SELECT a.id, a.name, a.breed, a.age, a.weight, a.height, a.commentary, a.customer_id FROM animals as a INNER JOIN customers as c on c.id = a.customer_id WHERE CONCAT(c.firstname,' ',c.lastname) = ? AND a.name = ?; ");
+        $stmt->bind_param("ss", $customer, $name);
         $stmt->execute();
         $result = $stmt->get_result();
         $AnimalData = $result->fetch_assoc();
         return new Animal($AnimalData);
     }
 
-    public function isLink($name, $mail) {
-        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals as a INNER JOIN customers as c ON c.id = a.customer_id WHERE a.name= ? AND c.mail = ?;");
-        $stmt->bind_param("ss", $name, $mail);
+    public function isLink($name, $customer) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals as a INNER JOIN customers as c ON c.id = a.customer_id WHERE a.name = ? AND CONCAT(c.firstname,' ',c.lastname) = ?;");
+        $stmt->bind_param("ss", $name, $customer);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
@@ -181,6 +181,17 @@ class Animal {
         $result = $stmt->get_result();
         $AnimalData = $result->fetch_assoc();
         return new Animal($AnimalData);
+    }
+
+    public function getNames() {
+        $stmt = $this->connexion->conn->prepare("SELECT name FROM animals");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $animals = [];
+        while ($animalData = $result->fetch_assoc()) {
+            $animals[] = $animalData['name'];
+        }
+        return $animals;
     }
 }
 ?>

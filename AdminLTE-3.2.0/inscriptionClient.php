@@ -5,7 +5,6 @@ require_once 'include/class/customers.php';
 if (isset($_POST['CO'])) {
   $c = new Customer();
   $c->AddCustomer($_POST["InputFirstName"], $_POST["InputLastName"], $_POST["InputEmail"], $_POST["InputPhone"], $_POST["InputAdress"], $_POST["InputCommentary"]);
-  header("Location : index.php");
 }
 ?>
 <!DOCTYPE html>
