@@ -119,5 +119,32 @@ class Customer {
         }
         return $customers;
     }
+
+    public function constructList() {
+        $stmt = $this->connexion->conn->prepare("SELECT CONCAT(c.firstname, ' ', c.lastname) as name, COUNT(a.customer_id) as CountAnimals, c.id as ID FROM customers as c LEFT JOIN animals as a ON a.customer_id = c.id GROUP BY c.id;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            $rows = [];
+            // Fetch rows as associative array
+            while ($customerData = $result->fetch_assoc()) {
+                // Choose an avatar randomly
+                $avatarNumber = rand(3, 4);
+
+                // Use the appropriate avatar based on the random number
+                $avatar = ($avatarNumber == 3) ? "avatar3.png" : "avatar4.png";
+
+                $rows[] = [
+                    "customerData" => $customerData,
+                    "avatar" => $avatar,
+                ];
+            }
+            return $rows;
+        } else {
+            // Handle the case where the query was not successful
+            echo "Error: " . mysqli_error($conn);
+        }
+    }
 }
 ?>

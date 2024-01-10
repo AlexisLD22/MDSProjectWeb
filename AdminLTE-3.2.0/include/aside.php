@@ -54,12 +54,6 @@
               </li>
             </ul>
           </li>
-          <!-- <li>
-            <a href="inscriptions.php" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>Inscriptions</p>
-            </a>
-          </li> -->
           <li>
             <a href="data.php" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
@@ -72,11 +66,28 @@
               <p>Calendar</p>
             </a>
           </li>
-          <li>
-            <a href="listings.php" class="nav-link">
+          <li class="nav-item">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
-              <p>Listing</p>
+              <p>
+                Listings
+                <i class="fas fa-angle-left right"></i>
+              </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="listingCustomers.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Liste Clients</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="listings.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Liste Animaux</p>
+                </a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="statistiques.php" class="nav-link">
