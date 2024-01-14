@@ -1,15 +1,16 @@
 <?php
 require_once 'include/session.php';
 
-require_once 'include/class/users.php';
+require_once 'include/class/animals.php';
 
-$u = new User();
-$rows = $u->constructList();
+$a = new Animal();
+$rows = $a->constructList();
 
-if (isset($_POST["Delete"])) {
-  $u->deleteUser($_POST["user_id"]);
-  header("Location: admin.php");
-}
+// A FAIRE
+// if (isset($_POST["Delete"])) {
+//   $u->deleteUser($_POST["user_id"]);
+//   header("Location: admin.php");
+// }
 
 ?>
 <!DOCTYPE html>
@@ -47,7 +48,7 @@ if (isset($_POST["Delete"])) {
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Utilisateurs</li>
+              <li class="breadcrumb-item active">Liste Animaux</li>
             </ol>
           </div>
         </div>
@@ -59,75 +60,68 @@ if (isset($_POST["Delete"])) {
       <!-- Default box -->
       <div class="card">
           <div class="card-header">
-              <h3 class="card-title">Utilisateurs</h3>
+              <h3 class="card-title">Animaux</h3>
               <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                   <i class="fas fa-minus"></i>
-                  </button>
+                </button>
               </div>
           </div>
           <div class="card-body p-0">
-              <table class="table table-striped projects">
-                  <thead>
-                      <tr>
-                          <th style="width: 20%">
-                              Actions
-                          </th>
-                          <th style="width: 30%">
-                              Prénom et Nom
-                          </th>
-                          <th style="width: 25%">
-                              Avatar
-                          </th>
-                          <th style="width: 25%">
-                              Avancement formations
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <?php foreach($rows as $row): ?>
-                        <tr>
-
-                          <td class="project-actions text-right">
-                            <ul style="display: flex; list-style-type: none;">
-                              <li>
-                                <a href="<?= 'profileView.php?id=' . $row["userData"]["ID"]?>" class="btn btn-primary btn-sm">
-                                <i class="fas fa-folder"></i>View</a>
-                              </li>
-                              <li>
-                                <a href="<?= 'profileEdit.php?id=' . $row["userData"]["ID"]?>" class="btn btn-info btn-sm">
-                                <i class="fas fa-pencil-alt"></i>Edit</a>
-                              </li>
-                              <li>
-                                <button name="Delete" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-id="<?= $row["userData"]["ID"]?>" data-target="#modal-default">
-                                <i class="fas fa-trash"></i>Delete</button>
-                              </li>
-                            </ul>
-                          </td>
-                          
-                          <td>
-                            <?= $row["userData"]["FirstName"] . ' ' . $row["userData"]["LastName"]?>
-                          </td>
-
-                          <td>
-                            <ul class="list-inline">
-                              <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="dist/img/<?= $row["avatar"]?>"></li>
-                            </ul>
-                          </td>
-                          
-                          <td class="project_progress">
-                            <div class="progress progress-sm">
-                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="<?= $row["progressPercentage"]?>" aria-valuemin="0" aria-valuemax="100" style="width:<?= $row["progressPercentage"]?>%"></div>
-                              </div>
-                            <small><?= $row["userData"]["CountCapability"]?> formations achevées</small>
-                          </td>
-
-                        </tr>
-                      <?php endforeach;?>
-                  </tbody>
+            <table class="table table-striped projects">
+              <thead>
+                <tr>
+                  <th style="width: 20%">
+                    Actions
+                  </th>
+                  <th style="width: 30%">
+                    Nom de l'animal
+                  </th>
+                  <th style="width: 25%">
+                    Avatar
+                  </th>
+                  <th style="width: 25%">
+                    Nom du propriétaire
+                  </th>
+                </tr>
+              </thead>
+                <tbody>
+                  <?php foreach($rows as $row): ?>
+                    <tr>
+                      <td class="project-actions text-right">
+                        <ul style="display: flex; list-style-type: none;">
+                          <li>
+                            <a href="<?= 'animalView.php?id=' . $row["animalData"]["id"]?>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-folder"></i>View</a>
+                          </li>
+                          <li>
+                            <a href="<?= 'animalEdit.php?id=' . $row["animalData"]["id"]?>" class="btn btn-info btn-sm">
+                            <i class="fas fa-pencil-alt"></i>Edit</a>
+                          </li>
+                          <li>
+                            <button name="Delete" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-id="<?= $row["animalData"]["id"]?>" data-target="#modal-default">
+                            <i class="fas fa-trash"></i>Delete</button>
+                          </li>
+                        </ul>
+                      </td>
+                      
+                      <td>
+                        <?= $row["animalData"]["name"]?>
+                      </td>
+                      
+                      <td>
+                        <img alt="Avatar" class="table-avatar" src="dist/img/<?= $row["avatar"]?>">
+                      </td>
+                      
+                      <td>
+                        <?= $row["animalData"]["customerName"]?>
+                      </td>
+                    </tr>
+                  <?php endforeach;?>
+                </tbody>
               </table>
               <div>
-                <a href="profileEdit.php" class="btn btn-block btn-info btn-lg">Ajout d'un Utilisateur</a>
+                <a href="InscriptionAnimal.php" class="btn btn-block btn-info btn-lg">Ajout d'un Animal</a>
               </div>
           </div>
           <!-- /.card-body -->

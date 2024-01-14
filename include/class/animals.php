@@ -193,5 +193,29 @@ class Animal {
         }
         return $animals;
     }
+
+    public function constructList() {
+        $stmt = $this->connexion->conn->prepare("SELECT a.id, a.name, CONCAT(c.firstname, ' ', c.lastname) as customerName FROM animals as a INNER JOIN customers as c ON c.id = a.customer_id;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            $rows = [];
+            while ($animalData = $result->fetch_assoc()) {
+                // Choose an avatar randomly
+                $avatarNumber = rand(3, 4);
+                $avatar = ($avatarNumber == 3) ? "avatar3.png" : "avatar4.png";
+
+                $rows[] = [
+                    "animalData" => $animalData,
+                    "avatar" => $avatar,
+                ];
+            }
+            return $rows;
+        } else {
+            // Handle the case where the query was not successful
+            echo "Error: " . mysqli_error($conn);
+        }
+    }
 }
 ?>

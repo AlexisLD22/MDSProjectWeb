@@ -82,7 +82,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="listings.php" class="nav-link">
+                <a href="listingAnimals.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Liste Animaux</p>
                 </a>

@@ -6,6 +6,7 @@ require_once 'include/class/customers.php';
 $c = new Customer();
 $rows = $c->constructList();
 
+// A FAIRE
 // if (isset($_POST["Delete"])) {
 //   $u->deleteUser($_POST["user_id"]);
 //   header("Location: admin.php");
@@ -47,7 +48,7 @@ $rows = $c->constructList();
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Utilisateurs</li>
+              <li class="breadcrumb-item active">Liste Clients</li>
             </ol>
           </div>
         </div>
@@ -59,7 +60,7 @@ $rows = $c->constructList();
       <!-- Default box -->
       <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Utilisateurs</h3>
+            <h3 class="card-title">Clients</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-minus"></i>
