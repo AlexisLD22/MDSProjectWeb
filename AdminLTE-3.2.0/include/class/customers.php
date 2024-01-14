@@ -67,7 +67,7 @@ class Customer {
     }
 
     public function getCount() {
-        $CountResult = mysqli_query($this->connexion->conn, "SELECT COUNT(*) as count FROM Customers;");
+        $CountResult = mysqli_query($this->connexion->conn, "SELECT COUNT(*) as count FROM customers;");
         if (!$CountResult) {
             die("Database query failed.");
         }

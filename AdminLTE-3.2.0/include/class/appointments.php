@@ -39,7 +39,7 @@ class Appointment {
     }
 
     public function getAll() {
-        $appointments_result = mysqli_query($this->connexion->conn, "SELECT * FROM appointments;");
+        $appointments_result = mysqli_query($this->connexion->conn, "SELECT * FROM appointments ORDER BY date_start ASC;");
         if (!$appointments_result) {
             die("Database query failed.");
         }

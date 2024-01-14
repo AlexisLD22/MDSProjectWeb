@@ -121,7 +121,7 @@ $currentDateFormated = sprintf(
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <form method="post" action="profileEdit.php">
+                      <form method="post" action="<?= 'profileEdit.php?id=' . $userData->id?>">
                         <div class="user-block">
                           <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
                           <span class="username">
