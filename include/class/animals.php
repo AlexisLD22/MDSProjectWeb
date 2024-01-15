@@ -129,7 +129,7 @@ class Animal {
     }
 
     public function Exist($name, $customer) {
-        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals AS a INNER JOIN customers AS C ON c.id = a.customer_id WHERE a.name = ? AND CONCAT(c.firstname,' ',c.lastname) = ?;");
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals AS a INNER JOIN customers AS c ON c.id = a.customer_id WHERE a.name = ? AND CONCAT(c.firstname,' ',c.lastname) = ?;");
         $stmt->bind_param("ss", $name, $customer);
         $stmt->execute();
         $result = $stmt->get_result();
