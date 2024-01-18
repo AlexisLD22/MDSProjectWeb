@@ -113,10 +113,10 @@ class Appointment {
         // Check if the start time is after 10 AM and the end time is before 6 PM
         $startTime = $dateTime_start->format('H:i');
         $endTime = $dateTime_end->format('H:i');
-        if ($startTime < '10:00' || $endTime > '18:00') {
+        if ($startTime < '09:00' || $endTime > '18:00') {
             return array(
                 'valid' => false,
-                'reason' => "L'heure de début doit être après 10h et l'heure de fin doit être avant 18h."
+                'reason' => "L'heure de début doit être après 9h et l'heure de fin doit être avant 18h."
             );
         }
     

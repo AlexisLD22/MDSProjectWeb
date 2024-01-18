@@ -79,7 +79,7 @@ if (isset($_POST['AO'])) {
                     <div class="form-group row">
                       <label for="inputBreed" class="col-sm-2 col-form-label">Race de l'animal</label>
                       <div class="input-group mb-3 col-sm-10">
-                        <input type="Breed" class="form-control" name="inputBreed" placeholder="Race de l'animal">
+                        <input type="text" class="form-control" name="inputBreed" placeholder="Race de l'animal">
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-paw"></i></span>
                         </div>
@@ -90,7 +90,7 @@ if (isset($_POST['AO'])) {
                       <div class="col-4">
                         <label for="InputHeight">Taille</label>
                         <div class="input-group mb-3">
-                          <input type="Height" class="form-control" name="InputHeight" placeholder="Height">
+                          <input type="number" class="form-control" name="InputHeight" placeholder="Height">
                           <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-ruler-vertical"></i></span>
                           </div>
@@ -100,7 +100,7 @@ if (isset($_POST['AO'])) {
                       <div class="col-4">
                         <label for="InputWeight">Poids</label>
                         <div class="input-group mb-3">
-                          <input type="Weight" class="form-control" name="InputWeight" placeholder="Weight">
+                          <input type="number" class="form-control" name="InputWeight" placeholder="Weight">
                           <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-weight-hanging"></i></span>
                           </div>
@@ -110,7 +110,7 @@ if (isset($_POST['AO'])) {
                       <div class="col-4">
                         <label for="InputAge">Age</label>
                         <div class="input-group mb-3">
-                          <input type="Age" class="form-control" name="InputAge" placeholder="Age">
+                          <input type="number" class="form-control" name="InputAge" placeholder="Age">
                           <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-hourglass"></i></span>
                           </div>

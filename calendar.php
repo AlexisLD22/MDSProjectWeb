@@ -85,7 +85,7 @@ $calendar = $a_c->getCalendar();
                   <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                   
                     <div class="form-group">
-                      <label for="InputCustomer">Email</label>
+                      <label for="InputCustomer">Nom du propriétaire</label>
                       <select class="form-control" name="InputCustomer" id="customerDropdown">
                         <?php
                         foreach ($customers as $customersName) {

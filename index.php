@@ -102,7 +102,7 @@ $Number_Listing = $c->getCount();
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="listings.php" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="listingCustomers.php" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

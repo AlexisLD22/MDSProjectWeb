@@ -43,27 +43,27 @@
               <li class="nav-item">
                 <a href="inscriptionClient.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Add Client</p>
+                  <p>Ajouter un Client</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="inscriptionAnimal.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Add animal</p>
+                  <p>Ajouter un Animal</p>
                 </a>
               </li>
             </ul>
           </li>
-          <li>
+          <!-- <li>
             <a href="data.php" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>DataTables</p>
             </a>
-          </li>
+          </li> -->
           <li>
             <a href="calendar.php" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
-              <p>Calendar</p>
+              <p>Calendrier</p>
             </a>
           </li>
           <li class="nav-item">

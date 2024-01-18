@@ -140,8 +140,8 @@ $rows = $a->constructList();
                   <input type="hidden" name="user_id" value="" id="userToDelete">
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" name="Delete" class="btn btn-danger">Supprimer</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="submit" name="Delete" class="btn btn-danger">Supprimer</button>
                 </div>
               </form>
             </div>
