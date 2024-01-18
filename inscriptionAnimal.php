@@ -57,98 +57,97 @@ if (isset($_POST['AO'])) {
       <div class="container-fluid">
         <div class="row">
           <!-- DEBUT COLONNE GAUCHE -->
-            <div class="col-md-12">
-              <!-- DEBUT FORM ANIMAL ONLY -->
-              <div class="card card-info">
-                <div class="card-header">
-                  <h3 class="card-title">Inscription Animal</h3>
-                </div>
-                <form class="form-horizontal" method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
-                  <div class="card-body">
-                    
-                    <div class="form-group row">
-                      <label for="inputName" class="col-sm-2 col-form-label">Nom de l'animal</label>
-                      <div class="input-group mb-3 col-sm-10">
-                        <input type="Name" class="form-control" name="inputName" placeholder="Nom de l'animal">
-                        <div class="input-group-append">
-                          <span class="input-group-text"><i class="fas fa-font"></i></span>
-                        </div>
+          <div class="col-md-12">
+            <!-- DEBUT FORM ANIMAL ONLY -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Inscription Animal</h3>
+              </div>
+              <form class="form-horizontal" method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
+                <div class="card-body">    
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">Nom de l'animal</label>
+                    <div class="input-group mb-3 col-sm-10">
+                      <input type="Name" class="form-control" name="inputName" placeholder="Nom de l'animal">
+                      <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-font"></i></span>
                       </div>
                     </div>
-
-                    <div class="form-group row">
-                      <label for="inputBreed" class="col-sm-2 col-form-label">Race de l'animal</label>
-                      <div class="input-group mb-3 col-sm-10">
-                        <input type="text" class="form-control" name="inputBreed" placeholder="Race de l'animal">
-                        <div class="input-group-append">
-                          <span class="input-group-text"><i class="fas fa-paw"></i></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <div class="col-4">
-                        <label for="InputHeight">Taille</label>
-                        <div class="input-group mb-3">
-                          <input type="number" class="form-control" name="InputHeight" placeholder="Height">
-                          <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-ruler-vertical"></i></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-4">
-                        <label for="InputWeight">Poids</label>
-                        <div class="input-group mb-3">
-                          <input type="number" class="form-control" name="InputWeight" placeholder="Weight">
-                          <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-weight-hanging"></i></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-4">
-                        <label for="InputAge">Age</label>
-                        <div class="input-group mb-3">
-                          <input type="number" class="form-control" name="InputAge" placeholder="Age">
-                          <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-hourglass"></i></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label for="inputEmail" class="col-sm-3 col-form-label">Nom du propriétaire</label>
-                      <div class="input-group col-sm-9">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-font"></i></span>
-                        </div>
-                        <select class="form-control" name="InputCustomer" id="customerDropdown">
-                          <?php
-                          foreach ($customers as $customersName) {
-                            echo '<option value="' . $customersName . '">' . $customersName . '</option>';
-                          }
-                          ?>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="InputCommentary">Commentaire pour le chien</label>
-                      <div class="input-group mb-3">
-                        <textarea class="form-control" rows="3" name="inputCommentary" placeholder="Commentaire ..."></textarea>
-                        <div class="input-group-append">
-                          <span class="input-group-text"><i class="fas fa-file-word"></i></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <?php if (isset($_SESSION["error_message_InscriptionAnimal"])) : ?>
-                      <div class="error-message"><?= $_SESSION["error_message_InscriptionAnimal"]?></div>
-                    <?php endif; ?>
                   </div>
-                  <!-- /.card-body -->
+
+                  <div class="form-group row">
+                    <label for="inputBreed" class="col-sm-2 col-form-label">Race de l'animal</label>
+                    <div class="input-group mb-3 col-sm-10">
+                      <input type="text" class="form-control" name="inputBreed" placeholder="Race de l'animal">
+                      <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-paw"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-4">
+                      <label for="InputHeight">Taille</label>
+                      <div class="input-group mb-3">
+                        <input type="number" class="form-control" name="InputHeight" placeholder="Height">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><i class="fas fa-ruler-vertical"></i></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-4">
+                      <label for="InputWeight">Poids</label>
+                      <div class="input-group mb-3">
+                        <input type="number" class="form-control" name="InputWeight" placeholder="Weight">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><i class="fas fa-weight-hanging"></i></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-4">
+                      <label for="InputAge">Age</label>
+                      <div class="input-group mb-3">
+                        <input type="number" class="form-control" name="InputAge" placeholder="Age">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><i class="fas fa-hourglass"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="inputEmail" class="col-sm-3 col-form-label">Nom du propriétaire</label>
+                    <div class="input-group col-sm-9">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-font"></i></span>
+                      </div>
+                      <select class="form-control" name="InputCustomer" id="customerDropdown">
+                        <?php
+                        foreach ($customers as $customersName) {
+                          echo '<option value="' . $customersName . '">' . $customersName . '</option>';
+                        }
+                        ?>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="InputCommentary">Commentaire pour le chien</label>
+                    <div class="input-group mb-3">
+                      <textarea class="form-control" rows="3" name="inputCommentary" placeholder="Commentaire ..."></textarea>
+                      <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-file-word"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <?php if (isset($_SESSION["error_message_InscriptionAnimal"])) : ?>
+                    <div class="error-message"><?= $_SESSION["error_message_InscriptionAnimal"]?></div>
+                  <?php endif; ?>
+                </div>
+                <!-- /.card-body -->
                 <div class="card-footer">
                   <button type="submit" name="AO" class="btn btn-info">Enregistrer nouveau chien</button>
                   <!-- <button type="button" class="btn btn-default float-right" onclick="clearForm()">Cancel</button> -->
