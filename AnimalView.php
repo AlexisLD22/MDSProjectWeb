@@ -1,6 +1,7 @@
 <?php
 require_once 'include/session.php';
 require_once 'include/class/animals.php';
+require_once 'include/class/customers.php';
 require_once 'include/class/appointments.php';
 
 if(isset($_GET['id'])) {

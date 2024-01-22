@@ -1,12 +1,10 @@
 <?php
 require_once 'include/session.php';
 require_once 'include/class/appointments.php';
-
 require_once 'include/class/users.php';
 require_once 'include/class/services.php';
 require_once 'include/class/animals.php';
 require_once 'include/class/customers.php';
-
 
 if(isset($_GET['id'])) {
   $appointmentId = $_GET['id'];
