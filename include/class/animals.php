@@ -220,9 +220,11 @@ class Animal {
 
     public function update($id, $name, $breed, $customer, $height, $weight, $age, $commentary) {
         $_SESSION["error_message_animalEdit"] = NULL;
+        
         $c = new Customer();
         $customerData = $c->getByName($customer);
         $customerId = $customerData->id;
+
         if (strlen($name) > 0 && strlen($breed) > 0 && strlen($name) <= 45 && strlen($breed) <= 45 && strlen($age) > 0 && strlen($age) <= 3 && strlen($weight) > 0 && strlen($height) > 0 && strlen($weight) <= 3 && strlen($height) <= 3) {
             $stmt = $this->connexion->conn->prepare("UPDATE animals SET name = ?, breed = ?, age = ?, weight = ?, height = ?, commentary = ?, customer_id = ? WHERE id = ?;");
             $stmt->bind_param("ssssssss", $name, $breed, $height, $weight, $age, $commentary, $customerId, $id);
@@ -230,6 +232,17 @@ class Animal {
         } else {
             $_SESSION["error_message_animalEdit"] = "Les données sont invalides.";
         }
+    }
+
+    public function deleteAnimal($id) {
+        $stmtAnimal = $this->connexion->conn->prepare("DELETE FROM animals WHERE id = ?;");
+        $stmtAppointment = $this->connexion->conn->prepare("DELETE FROM appointments WHERE animal_id = ?;");
+
+        $stmtAnimal->bind_param("s", $id);
+        $stmtAppointment->bind_param("s", $id);
+
+        $stmtAnimal->execute();
+        $stmtAppointment->execute();
     }
 }
 ?>

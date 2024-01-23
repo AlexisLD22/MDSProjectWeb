@@ -2,7 +2,6 @@
 require_once 'include/session.php';
 require_once 'include/class/animals.php';
 require_once 'include/class/customers.php';
-require_once 'include/class/appointments.php';
 
 if(isset($_GET['id'])) {
   $animalId = $_GET['id'];
@@ -18,7 +17,7 @@ $customerData = $c->getById($animalData->customer_id);
 $customers = $c->getNames();
 
 if (isset($_POST['Confirmation'])) {
-  $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"], $_POST["customer_id"]);
+  $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"]);
 }
 ?>
 <!DOCTYPE html>
@@ -89,11 +88,10 @@ if (isset($_POST['Confirmation'])) {
                         </h3>
                       </div>
                       <!-- /.card-header -->
-                      <form method="POST" action="listingAnimals.php">
+                      <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                         <div class="card-body">
                           <dl class="row">
                             <input type="hidden" name="animal_id" value="<?= $animalData->id?>">
-                            <input type="hidden" name="customer_id" value="<?= $customerData->id?>">
                             
                             <dt class="col-sm-4">Nom de l'animal</dt>
                             <dd class="col-sm-8">

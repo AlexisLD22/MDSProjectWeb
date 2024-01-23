@@ -6,11 +6,10 @@ require_once 'include/class/animals.php';
 $a = new Animal();
 $rows = $a->constructList();
 
-// A FAIRE
-// if (isset($_POST["Delete"])) {
-//   $u->deleteUser($_POST["user_id"]);
-//   header("Location: admin.php");
-// }
+if (isset($_POST["Delete"])) {
+  $a->deleteAnimal($_POST["animal_id"]);
+  header("Location: listingAnimals.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -129,15 +128,15 @@ $rows = $a->constructList();
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Suppression d'un utilisateur</h4>
+                <h4 class="modal-title">Suppression d'un animal</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <form method="post" action="<?= $_SERVER['PHP_SELF']?>">
                 <div class="modal-body">
-                  <p>Etes-vous sûr de vouloir supprimer l'utilisateur ?</p>
-                  <input type="hidden" name="user_id" value="" id="userToDelete">
+                  <p>Etes-vous sûr de vouloir supprimer l'animal ?</p>
+                  <input type="hidden" name="animal_id" value="" id="animalToDelete">
                 </div>
                 <div class="modal-footer justify-content-between">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -174,11 +173,8 @@ $rows = $a->constructList();
     $(document).ready(function(){
         $('.delete-btn').on('click', function() {
             var userId = $(this).data('id');
-            console.log(userId);
-            let inputhidden = $('#userToDelete');
-            console.log(inputhidden);
+            let inputhidden = $('#animalToDelete');
             inputhidden.val(userId);
-            console.log(inputhidden);
         });
     });
 </script>
