@@ -39,16 +39,19 @@ class Appointment {
     }
 
     public function getAll() {
-        $appointments_result = mysqli_query($this->connexion->conn, "SELECT * FROM appointments ORDER BY date_start ASC;");
-        if (!$appointments_result) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM appointments ORDER BY date_start ASC;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (!$result) {
             die("Database query failed.");
         }
         $appointments = [];
-        while ($appointment_bdd = mysqli_fetch_assoc($appointments_result)) {
+        while ($appointment_bdd = $result->fetch_assoc()) {
             $appointments[] = new Appointment($appointment_bdd);
         }
         return $appointments;
     }
+    
 
     public function getById($id) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM appointments WHERE id=?;");
@@ -166,9 +169,16 @@ class Appointment {
     }
 
     public function getCalendar() {
-        $calendarQuery = mysqli_query($this->connexion->conn, "SELECT a.id as id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");
+        $stmt = $this->connexion->conn->prepare("SELECT a.id as id, a.date_start as start, a.date_end as end, is_paid, CONCAT(u.firstname, ' ', u.lastname) as nom_client, an.name as nom_animal, s.name as nom_service FROM appointments as a INNER JOIN users as u ON u.id = a.user_id INNER JOIN animals as an ON an.id = a.animal_id INNER JOIN services as s ON s.id = a.service_id;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if (!$result) {
+            die("Database query failed.");
+        }
+        
         $calendar = [];
-        while ($row = mysqli_fetch_assoc($calendarQuery)) {
+        while ($row = $result->fetch_assoc()) {
             $event = [
                 'title' => $row['nom_service'] .' de ' . $row['nom_animal'] . ' - ' . $row['nom_client'],
                 'start' => $row['start'],
@@ -180,6 +190,7 @@ class Appointment {
         }
         return json_encode($calendar);
     }
+    
     
     public function announceDate($dateString) {
         $date = new DateTime($dateString);

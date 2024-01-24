@@ -16,32 +16,44 @@ class User {
     function __construct($user_bdd = NULL) {
         $this->connexion = new Connexion();
         if ($user_bdd !== NULL) {
-            $this->id = $user_bdd['id'];
-            $this->is_admin = $user_bdd['is_admin'];
-            $this->firstname = $user_bdd['firstname'];
-            $this->lastname = $user_bdd['lastname'];
-            $this->telephone = $user_bdd['telephone'];
-            $this->mail = $user_bdd['mail'];
-            $this->postal_adress = $user_bdd['postal_adress'];
-            $this->password = $user_bdd['password'];
+            if (is_array($user_bdd)) {
+                $this->id = $user_bdd['id'];
+                $this->is_admin = $user_bdd['is_admin'];
+                $this->firstname = $user_bdd['firstname'];
+                $this->lastname = $user_bdd['lastname'];
+                $this->telephone = $user_bdd['telephone'];
+                $this->mail = $user_bdd['mail'];
+                $this->postal_adress = $user_bdd['postal_adress'];
+                $this->password = $user_bdd['password'];
+            } else {
+                $this->id = $user_bdd->id;
+                $this->is_admin = $user_bdd->is_admin;
+                $this->firstname = $user_bdd->firstname;
+                $this->lastname = $user_bdd->lastname;
+                $this->telephone = $user_bdd->telephone;
+                $this->mail = $user_bdd->mail;
+                $this->postal_adress = $user_bdd->postal_adress;
+                $this->password = $user_bdd->password;
+            }
         }
     }
 
     public function getAll() {
-        $users_result = mysqli_query($this->connexion->conn, "SELECT * FROM users;");
-        if (!$users_result) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM users;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (!$result) {
             die("Database query failed.");
         }
         $users = [];
-        while ($user_bdd = mysqli_fetch_assoc($users_result)) {
+        while ($user_bdd = $result->fetch_assoc()) {
             $users[] = new User($user_bdd);
         }
         return $users;
     }
     
     public function login($mail, $password) {
-        $LoginQuery = "SELECT * FROM users WHERE mail = ? AND password = ?";
-        $stmt = $this->connexion->conn->prepare($LoginQuery);
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM users WHERE mail = ? AND password = ?;");
         $stmt->bind_param("ss", $mail, $password);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -100,8 +112,8 @@ class User {
         $stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $UserData = $result->fetch_assoc();
-        return new User($UserData);
+        $userData = $result->fetch_assoc();
+        return new User($userData);
     }
 
     public function getCapabilityById($id){

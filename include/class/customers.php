@@ -36,16 +36,19 @@ class Customer {
     }
 
     public function getAll() {
-        $customers_result = mysqli_query($this->connexion->conn, "SELECT * FROM customers;");
-        if (!$customers_result) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM customers;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (!$result) {
             die("Database query failed.");
         }
         $customers = [];
-        while ($customer_bdd = mysqli_fetch_assoc($customers_result)) {
+        while ($customer_bdd = $result->fetch_assoc()) {
             $customers[] = new Customer($customer_bdd);
-        }
+        }        
         return $customers;
     }
+    
     
     public function getByMail($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE mail = ? ");
@@ -67,13 +70,16 @@ class Customer {
     }
 
     public function getCount() {
-        $CountResult = mysqli_query($this->connexion->conn, "SELECT COUNT(*) as count FROM customers;");
-        if (!$CountResult) {
+        $stmt = $this->connexion->conn->prepare("SELECT COUNT(*) as count FROM customers;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (!$result) {
             die("Database query failed.");
-        }
-        $CountData = mysqli_fetch_assoc($CountResult);
-        return $CountData['count'];
+        }        
+        $countData = $result->fetch_assoc();
+        return $countData['count'];
     }
+    
 
     public function Exist($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE mail = ?");

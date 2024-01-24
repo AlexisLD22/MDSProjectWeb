@@ -40,35 +40,44 @@ class Animal {
     }
 
     public function getAll() {
-        $animals_result = mysqli_query($this->connexion->conn, "SELECT * FROM animals;");
-        if (!$animals_result) {
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM animals;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if (!$result) {
             die("Database query failed.");
         }
         $animals = [];
-        while ($animal_bdd = mysqli_fetch_assoc($animals_result)) {
+        while ($animal_bdd = $result->fetch_assoc()) {
             $animals[] = new Animal($animal_bdd);
         }
         return $animals;
     }
-
+    
     public function getAvgWeight() {
-        $avgWeightResult = mysqli_query($this->connexion->conn, "SELECT ROUND(AVG(weight)) AS average_weight FROM animals;");
-        if (!$avgWeightResult) {
+        $stmt = $this->connexion->conn->prepare("SELECT ROUND(AVG(weight)) AS average_weight FROM animals;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if (!$result) {
             die("Database query failed.");
         }
-        $avgWeightData = mysqli_fetch_assoc($avgWeightResult);
+
+        $avgWeightData = $result->fetch_assoc();
         return $avgWeightData['average_weight'];
     }
 
     public function getBreedData() {
-        $query = "SELECT breed, COUNT(*) as count FROM animals GROUP BY breed";
-        $result = mysqli_query($this->connexion->conn, $query);
+        $stmt = $this->connexion->conn->prepare("SELECT breed, COUNT(*) as count FROM animals GROUP BY breed");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if (!$result) {
             die("Database query failed.");
         }
 
         $breedData = [];
-        while ($data = mysqli_fetch_assoc($result)) {
+        while ($data = $result->fetch_assoc()) {
             $breedData[] = [
                 'breed' => $data['breed'],
                 'count' => $data['count'],
@@ -78,14 +87,16 @@ class Animal {
     }
 
     public function getHeightData() {
-        $query = "SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;";
-        $result = mysqli_query($this->connexion->conn, $query);
+        $stmt = $this->connexion->conn->prepare("SELECT type_height, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN height < 110 THEN 'petit' WHEN (height BETWEEN 110 AND 130) THEN 'moyen' WHEN height > 130 THEN 'grand' END AS type_height FROM animals ) AS subquery GROUP BY type_height;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if (!$result) {
             die("Database query failed.");
         }
 
         $HeightData = [];
-        while ($data = mysqli_fetch_assoc($result)) {
+        while ($data = $result->fetch_assoc()) {
             $HeightData[] = [
                 'type_height' => $data['type_height'],
                 'count' => $data['count'],
@@ -95,14 +106,16 @@ class Animal {
     }
 
     public function getCapabilitiesData() {
-        $query = "SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;";
-        $result = mysqli_query($this->connexion->conn, $query);
+        $stmt = $this->connexion->conn->prepare("SELECT s.name, COUNT(c.service_id) as count FROM capabilities as c INNER JOIN services as s ON s.id = c.service_id GROUP BY name;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
         if (!$result) {
             die("Database query failed.");
         }
-
+        
         $CapabilitiesData = [];
-        while ($data = mysqli_fetch_assoc($result)) {
+        while ($data = $result->fetch_assoc()) {
             $CapabilitiesData[] = [
                 'name' => $data['name'],
                 'count' => $data['count'],
@@ -112,14 +125,16 @@ class Animal {
     }
 
     public function getWeightData() {
-        $query = "SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;";
-        $result = mysqli_query($this->connexion->conn, $query);
+        $stmt = $this->connexion->conn->prepare("SELECT type_weight, COUNT(*) AS count FROM ( SELECT breed, CASE WHEN weight < 40 THEN 'léger' WHEN (weight BETWEEN 40 AND 55) THEN 'normal' WHEN weight > 55 THEN 'gros' END AS type_weight FROM animals ) AS subquery GROUP BY type_weight;");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if (!$result) {
             die("Database query failed.");
         }
 
         $WeightData = [];
-        while ($data = mysqli_fetch_assoc($result)) {
+        while ($data = $result->fetch_assoc()) {
             $WeightData[] = [
                 'type_weight' => $data['type_weight'],
                 'count' => $data['count'],
