@@ -1,6 +1,5 @@
 <?php
 require_once 'include/session.php';
-
 require_once 'include/class/animals.php';
 
 $a = new Animal();
@@ -10,7 +9,6 @@ if (isset($_POST["Delete"])) {
   $a->deleteAnimal($_POST["animal_id"]);
   header("Location: listingAnimals.php");
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,72 +56,72 @@ if (isset($_POST["Delete"])) {
     <section class="content">
       <!-- Default box -->
       <div class="card">
-          <div class="card-header">
-              <h3 class="card-title">Animaux</h3>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
+        <div class="card-header">
+          <h3 class="card-title">Animaux</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
           </div>
-          <div class="card-body p-0">
-            <table class="table table-striped projects">
-              <thead>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-striped projects">
+            <thead>
+              <tr>
+                <th style="width: 20%">
+                  Actions
+                </th>
+                <th style="width: 30%">
+                  Nom de l'animal
+                </th>
+                <th style="width: 25%">
+                  Avatar
+                </th>
+                <th style="width: 25%">
+                  Nom du propriétaire
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach($rows as $row): ?>
                 <tr>
-                  <th style="width: 20%">
-                    Actions
-                  </th>
-                  <th style="width: 30%">
-                    Nom de l'animal
-                  </th>
-                  <th style="width: 25%">
-                    Avatar
-                  </th>
-                  <th style="width: 25%">
-                    Nom du propriétaire
-                  </th>
+                  <td class="project-actions text-right">
+                    <ul style="display: flex; list-style-type: none;">
+                      <li>
+                        <a href="<?= 'animalView.php?id=' . $row["animalData"]["id"]?>" class="btn btn-primary btn-sm">
+                        <i class="fas fa-folder"></i>View</a>
+                      </li>
+                      <li>
+                        <a href="<?= 'animalEdit.php?id=' . $row["animalData"]["id"]?>" class="btn btn-info btn-sm">
+                        <i class="fas fa-pencil-alt"></i>Edit</a>
+                      </li>
+                      <li>
+                        <button name="Delete" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-id="<?= $row["animalData"]["id"]?>" data-target="#modal-default">
+                        <i class="fas fa-trash"></i>Delete</button>
+                      </li>
+                    </ul>
+                  </td>
+                  
+                  <td>
+                    <?= $row["animalData"]["name"]?>
+                  </td>
+                  
+                  <td>
+                    <img alt="Avatar" class="table-avatar" src="dist/img/<?= $row["avatar"]?>">
+                  </td>
+                  
+                  <td>
+                    <?= $row["animalData"]["customerName"]?>
+                  </td>
                 </tr>
-              </thead>
-                <tbody>
-                  <?php foreach($rows as $row): ?>
-                    <tr>
-                      <td class="project-actions text-right">
-                        <ul style="display: flex; list-style-type: none;">
-                          <li>
-                            <a href="<?= 'animalView.php?id=' . $row["animalData"]["id"]?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-folder"></i>View</a>
-                          </li>
-                          <li>
-                            <a href="<?= 'animalEdit.php?id=' . $row["animalData"]["id"]?>" class="btn btn-info btn-sm">
-                            <i class="fas fa-pencil-alt"></i>Edit</a>
-                          </li>
-                          <li>
-                            <button name="Delete" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-id="<?= $row["animalData"]["id"]?>" data-target="#modal-default">
-                            <i class="fas fa-trash"></i>Delete</button>
-                          </li>
-                        </ul>
-                      </td>
-                      
-                      <td>
-                        <?= $row["animalData"]["name"]?>
-                      </td>
-                      
-                      <td>
-                        <img alt="Avatar" class="table-avatar" src="dist/img/<?= $row["avatar"]?>">
-                      </td>
-                      
-                      <td>
-                        <?= $row["animalData"]["customerName"]?>
-                      </td>
-                    </tr>
-                  <?php endforeach;?>
-                </tbody>
-              </table>
-              <div>
-                <a href="InscriptionAnimal.php" class="btn btn-block btn-info btn-lg">Ajout d'un Animal</a>
-              </div>
+              <?php endforeach;?>
+            </tbody>
+          </table>
+          <div>
+            <a href="InscriptionAnimal.php" class="btn btn-block btn-info btn-lg">Ajout d'un Animal</a>
           </div>
-          <!-- /.card-body -->
+        </div>
+        <!-- /.card-body -->
         <div class="modal fade" id="modal-default">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -150,7 +148,6 @@ if (isset($_POST["Delete"])) {
         </div>
       </div>
       <!-- /.card -->
-
     </section>
     <!-- /.content -->
   </div>
@@ -170,13 +167,13 @@ if (isset($_POST["Delete"])) {
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script>
-    $(document).ready(function(){
-        $('.delete-btn').on('click', function() {
-            var userId = $(this).data('id');
-            let inputhidden = $('#animalToDelete');
-            inputhidden.val(userId);
-        });
-    });
+$(document).ready(function(){
+  $('.delete-btn').on('click', function() {
+    var userId = $(this).data('id');
+    let inputhidden = $('#animalToDelete');
+    inputhidden.val(userId);
+  });
+});
 </script>
 </body>
 </html>
