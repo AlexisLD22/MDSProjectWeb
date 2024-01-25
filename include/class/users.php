@@ -53,26 +53,36 @@ class User {
     }
     
     public function login($mail, $password) {
-        $stmt = $this->connexion->conn->prepare("SELECT * FROM users WHERE mail = ? AND password = ?;");
-        $stmt->bind_param("ss", $mail, $password);
+        $stmt = $this->connexion->conn->prepare("SELECT * FROM users WHERE mail = ?;");
+        $stmt->bind_param("s", $mail);
         $stmt->execute();
         $result = $stmt->get_result();
     
         if ($result->num_rows === 1) {
-            session_start();
-            $_SESSION['is_logged_in'] = true;
+            $userData = $result->fetch_assoc();
     
-            // Récupérer le nom et prénom de l'utilisateur qui vient de se connecter :
-            $this->GetName($mail);
-            header("Location: index.php"); // Redirect to the index.php page
-            exit();
+            if (password_verify($password, $userData['password'])) {
+                session_start();
+                $_SESSION['is_logged_in'] = true;
+    
+                // Récupérer le nom et prénom de l'utilisateur qui vient de se connecter :
+                $this->GetName($mail);
+                header("Location: index.php"); // Redirect to the index.php page
+                exit();
+            } else {
+                // Login failed
+                $_SESSION["error_message"] = "Login failed. Please check your email and password.";
+                // Add error handling here (e.g., set $error_message and display it in the form)
+            }
         } else {
-            // Login failed
-            $_SESSION["error_message"] = "Login failed. Please check your email and password.";
+            // User not found
+            $_SESSION["error_message"] = "User not found. Please check your email and password.";
             // Add error handling here (e.g., set $error_message and display it in the form)
         }
+    
         $stmt->close();
     }
+    
 
     public function GetName($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT CONCAT(firstname,' ',lastname) as FullName, is_admin FROM users WHERE mail = ?");
@@ -175,14 +185,16 @@ class User {
     }
     
     public function createUser($is_admin, $firstname, $lastname, $capabalities, $telephone, $mail, $postal_adress, $password) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    
         $stmt = $this->connexion->conn->prepare("INSERT INTO users (is_admin, firstname, lastname, telephone, mail, postal_adress, password) VALUES (?, ?, ?, ?, ?, ?, ?);");
-        $stmt->bind_param("sssssss", $is_admin, $firstname, $lastname, $telephone, $mail, $postal_adress, $password);
+        $stmt->bind_param("sssssss", $is_admin, $firstname, $lastname, $telephone, $mail, $postal_adress, $hashedPassword);
         $stmt->execute();
-
+    
         $User = $firstname . " " . $lastname;
         $u = new User();
         $userData = $u->getByName($User);
-
+    
         $s = new Service();
         $services = $s->getServices();
         $index = 0;
@@ -197,6 +209,7 @@ class User {
             $index = $index + 1;
         }
     }
+    
     
     public function update($id, $is_admin, $firstname, $lastname, $capabalities, $telephone, $mail, $postal_adress) {
         // Requête pour changer les informations dans la table users :
