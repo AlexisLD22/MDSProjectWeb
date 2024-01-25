@@ -252,12 +252,25 @@ class Animal {
     public function deleteAnimal($id) {
         $stmtAnimal = $this->connexion->conn->prepare("DELETE FROM animals WHERE id = ?;");
         $stmtAppointment = $this->connexion->conn->prepare("DELETE FROM appointments WHERE animal_id = ?;");
-
+        
         $stmtAnimal->bind_param("s", $id);
         $stmtAppointment->bind_param("s", $id);
-
+        
         $stmtAnimal->execute();
         $stmtAppointment->execute();
+    }
+    
+    public function getAnimalsByCustomerId($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT * from animals where customer_id = ?;");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $animals = [];
+        while ($animal_bdd = $result->fetch_assoc()) {
+            $animals[] = new Animal($animal_bdd);
+        }
+        return $animals;
     }
 }
 ?>

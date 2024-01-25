@@ -1,42 +1,30 @@
 <?php
 require_once 'include/session.php';
-require_once 'include/class/users.php';
-require_once 'include/class/services.php';
+require_once 'include/class/animals.php';
+require_once 'include/class/customers.php';
 require_once 'include/class/appointments.php';
 
 if(isset($_GET['id'])) {
-  $userId = $_GET['id'];
+  $customerId = $_GET['id'];
 } else {
-  header("Location: admin.php");
+  header("Location: listingCustomers.php");
 }
 
-$u = new User();
-$userData = $u->getById($userId);
-$userAbilities = $u->getCapabilityById($userId);
+$c = new Customer();
+$customerData = $c->getById($customerId);
 
-$s = new Service();
-$services = $s->getServices();
 
-$a = new Appointment();
-$appointments = $a->getAll();
+$a = new Animal();
+$animals = $a->getAnimalsByCustomerId($customerData->id);
 
-$currentDate = getdate();
-$currentDateFormated = sprintf(
-  "%04d-%02d-%02d %02d:%02d:%02d",
-  $currentDate["year"],
-  $currentDate["mon"],
-  $currentDate["mday"],
-  $currentDate["hours"],
-  $currentDate["minutes"],
-  $currentDate["seconds"]
-);
+$an = new Appointment();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | User Profile</title>
+  <title>AdminLTE 3 | Customer Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -65,7 +53,7 @@ $currentDateFormated = sprintf(
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">User Profile</li>
+              <li class="breadcrumb-item active">Customer Profile</li>
             </ol>
           </div>
         </div>
@@ -83,16 +71,19 @@ $currentDateFormated = sprintf(
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
                 </div>
-                <h3 class="profile-username text-center"><?= $userData->firstname . ' ' . $userData->lastname?></h3>
+                <h3 class="profile-username text-center"><?= $customerData->firstname . ' ' . $customerData->lastname?></h3>
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Téléphone</b> <a class="float-right"><?= $userData->telephone?></a>
+                    <b>Telephone</b> <a class="float-right"><?= $customerData->telephone?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Mail</b> <a class="float-right"><?= $userData->mail?></a>
+                    <b>Adresse mail</b> <a class="float-right"><?= $customerData->mail?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Postal address</b> <a class="float-right"><?= $userData->postal_adress?></a>
+                    <b>Adresse postale</b> <a class="float-right"><?= $customerData->postal_adress?></a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Nombre d'animaux</b> <a class="float-right"><?= $customerData->id?></a>
                   </li>
                 </ul>
               </div>
@@ -100,14 +91,14 @@ $currentDateFormated = sprintf(
             
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">Listes des prochains rendez-vous</h3>
+                <h3 class="profile-username text-center">Rendez-vous des animaux</h3>
                 <ul class="list-group list-group-unbordered mb-3">
-                  <?php foreach($appointments as $appointment): ?>
-                    <?php if ($currentDateFormated < $appointment->date_start && intval($appointment->user_id) === $userData->id): ?>
-                      <li class="list-group-item">
-                        <?= $a->announceDate($appointment->date_start)?>
-                      </li>
-                    <?php endif; ?>
+                  <?php foreach($animals as $animal): ?>
+                    <li class="list-group-item">
+                      <?= $animal->name?>
+                      <br>
+                      <?= $an->GetNextAppointmentByAnimalId($animal->id)?>
+                    </li>
                   <?php endforeach ?>
                 </ul>
               </div>
@@ -121,51 +112,52 @@ $currentDateFormated = sprintf(
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <form method="post" action="<?= 'profileEdit.php?id=' . $userData->id?>">
+                      <form method="post" action="<?= 'CustomerEdit.php?id=' . $customerData->id?>">
                         <div class="user-block">
                           <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
                           <span class="username">
-                            <a href="#"><?= $userData->firstname . ' ' . $userData->lastname?></a>
+                            <a href="#"><?= $customerData->firstname . ' ' . $customerData->lastname?></a>
                           </span>
                         </div>
                         <div class="card-header">
                           <h3 class="card-title">
                             <i class="fas fa-text-width"></i>
-                            Fiche de poste
+                            Fiche d'informations
                           </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                           <dl class="row">
-                            <input type="hidden" name="user_id" value="<?= $userData->id?>">
+                            <input type="hidden" name="customer_id" value="<?= $customerData->id?>">
                             <dt class="col-sm-4">ID</dt>
-                            <dd class="col-sm-8"><?= $userData->id?></dd>
+                            <dd class="col-sm-8"><?= $customerData->id?></dd>
                             
-                            <dt class="col-sm-4">Est administrateur</dt>
-                            <dd class="col-sm-8"><?= $userData->is_admin ? "Vrai" : "Faux" ?></dd>
-                            
-                            <dt class="col-sm-4">Prénom</dt>
-                            <dd class="col-sm-8"><?= $userData->firstname?></dd>
-                            
-                            <dt class="col-sm-4">Nom </dt>
-                            <dd class="col-sm-8"><?= $userData->lastname?></dd>
-                            
-                            <dt class="col-sm-4">Formations :</dt>
-                            <?php foreach($services as $service): ?>
-                            <dd class="col-sm-8 offset-sm-4"><?= in_array($service, $userAbilities) ? "Possède la formation $service." : "Ne possède pas la formation $service."?></dd>
-                            <?php endforeach?>
-                            
-                            <dt class="col-sm-4">Téléphone</dt>
-                            <dd class="col-sm-8"><?= $userData->telephone?></dd>
+                            <dt class="col-sm-4">Nom du client</dt>
+                            <dd class="col-sm-8"><?= $customerData->firstname . ' ' . $customerData->lastname?></dd>
 
-                            <dt class="col-sm-4">Adresse mail</dt>
-                            <dd class="col-sm-8"><?= $userData->mail?></dd>
+                            <dt class="col-sm-4">Telephone</dt>
+                            <dd class="col-sm-8"><?= $customerData->telephone?></dd>
+                            
+                            <dt class="col-sm-4">Mail</dt>
+                            <dd class="col-sm-8"><?= $customerData->mail?></dd>
                             
                             <dt class="col-sm-4">Adresse postal</dt>
-                            <dd class="col-sm-8"><?= $userData->postal_adress?></dd>
+                            <dd class="col-sm-8"><?= $customerData->postal_adress?></dd>
+
+                            <dt class="col-sm-4">Animaux :</dt>
+                            <?php foreach($animals as $animal): ?>
+                            <dd class="col-sm-8 offset-sm-4">
+                              <?= $animal->name?>
+                              <a href="<?= 'animalView.php?id=' . $animal->id?>" class="btn btn-primary btn-sm">
+                              <i class="fas fa-folder"></i>Voir</a>
+                            </dd>
+                            <?php endforeach?>
+
+                            <dt class="col-sm-4">Commentaire</dt>
+                            <dd class="col-sm-8"><?= $customerData->commentary?></dd>
                           </dl>
                         </div>
-                        <button type="submit" name="Edit" class="btn btn-primary btn-block"> <b>Changer les informations</b></button>
+                        <button type="submit" name="Edit" class="btn btn-primary btn-block"><b>Changer les informations</b></button>
                       </form>
                     </div>
                   </div>
@@ -187,7 +179,6 @@ $currentDateFormated = sprintf(
   <?php require_once 'include/footer.php';?>
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->

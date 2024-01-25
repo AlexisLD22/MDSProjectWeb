@@ -52,7 +52,6 @@ class Appointment {
         return $appointments;
     }
     
-
     public function getById($id) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM appointments WHERE id=?;");
         $stmt->bind_param("s", $id);
@@ -191,7 +190,6 @@ class Appointment {
         return json_encode($calendar);
     }
     
-    
     public function announceDate($dateString) {
         $date = new DateTime($dateString);
         
@@ -257,6 +255,36 @@ class Appointment {
             $_SESSION["error_message"] = "L'employé n'a pas les compétences de faire la tâche demandée du service " . $service;
         } else {
             $_SESSION["error_message"] = $dateValidationResult["reason"];
+        }
+    }
+
+    public function GetNextAppointmentByAnimalId($id) {
+        $stmt = $this->connexion->conn->prepare("SELECT date_start FROM appointments WHERE animal_id = ? ORDER BY date_start DESC;");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $ans = NULL;
+        $currentDate = getdate();
+        $currentDateFormated = sprintf(
+            "%04d-%02d-%02d %02d:%02d:%02d",
+            $currentDate["year"],
+            $currentDate["mon"],
+            $currentDate["mday"],
+            $currentDate["hours"],
+            $currentDate["minutes"],
+            $currentDate["seconds"]
+        );
+
+        while ($appointment = $result->fetch_assoc()) {
+            if ($currentDateFormated < $appointment["date_start"]) {
+                $ans = $appointment;
+            }
+        }
+        if (isset($ans)) {
+            return $this->announceDate($ans["date_start"]);
+        } else {
+            return "Aucun rendez-vous";
         }
     }
 }

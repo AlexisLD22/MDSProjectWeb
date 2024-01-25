@@ -152,5 +152,16 @@ class Customer {
             echo "Error: " . mysqli_error($conn);
         }
     }
+
+    public function deleteCustomer($id) {
+        $stmtAnimal = $this->connexion->conn->prepare("DELETE FROM animals WHERE customer_id = ?;");
+        $stmtCustomer = $this->connexion->conn->prepare("DELETE FROM customers WHERE id = ?;");
+
+        $stmtAnimal->bind_param("s", $id);
+        $stmtCustomer->bind_param("s", $id);
+
+        $stmtAnimal->execute();
+        $stmtCustomer->execute();
+    }
 }
 ?>

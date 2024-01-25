@@ -6,11 +6,10 @@ require_once 'include/class/customers.php';
 $c = new Customer();
 $rows = $c->constructList();
 
-// A FAIRE
-// if (isset($_POST["Delete"])) {
-//   $u->deleteUser($_POST["user_id"]);
-//   header("Location: admin.php");
-// }
+if (isset($_POST["Delete"])) {
+  $c->deleteCustomer($_POST["customer_id"]);
+  header("Location: listingCustomers.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -91,11 +90,11 @@ $rows = $c->constructList();
                     <td class="project-actions text-right">
                       <ul style="display: flex; list-style-type: none;">
                         <li>
-                          <a href="<?= 'profileView.php?id=' . $row["customerData"]["ID"]?>" class="btn btn-primary btn-sm">
+                          <a href="<?= 'customerView.php?id=' . $row["customerData"]["ID"]?>" class="btn btn-primary btn-sm">
                           <i class="fas fa-folder"></i>View</a>
                         </li>
                         <li>
-                          <a href="<?= 'profileEdit.php?id=' . $row["customerData"]["ID"]?>" class="btn btn-info btn-sm">
+                          <a href="<?= 'customerEdit.php?id=' . $row["customerData"]["ID"]?>" class="btn btn-info btn-sm">
                           <i class="fas fa-pencil-alt"></i>Edit</a>
                         </li>
                         <li>
@@ -131,15 +130,15 @@ $rows = $c->constructList();
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Suppression d'un utilisateur</h4>
+                <h4 class="modal-title">Suppression d'un client</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <form method="post" action="<?= $_SERVER['PHP_SELF']?>">
                 <div class="modal-body">
-                  <p>Etes-vous sûr de vouloir supprimer l'utilisateur ?</p>
-                  <input type="hidden" name="user_id" value="" id="userToDelete">
+                  <p>Etes-vous sûr de vouloir supprimer un client ?</p>
+                  <input type="hidden" name="customer_id" value="" id="customerToDelete">
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -176,7 +175,7 @@ $rows = $c->constructList();
     $(document).ready(function(){
         $('.delete-btn').on('click', function() {
             var userId = $(this).data('id');
-            let inputhidden = $('#userToDelete');
+            let inputhidden = $('#customerToDelete');
             inputhidden.val(userId);
         });
     });
