@@ -1,24 +1,25 @@
 <?php
-require_once 'include/session.php';
-require_once 'include/class/animals.php';
-require_once 'include/class/customers.php';
+// A FAIRE
+// require_once 'include/session.php';
+// require_once 'include/class/animals.php';
+// require_once 'include/class/customers.php';
 
-if(isset($_GET['id'])) {
-  $animalId = $_GET['id'];
-} else {
-  header("Location: listingAnimals.php");
-}
+// if(isset($_GET['id'])) {
+//   $animalId = $_GET['id'];
+// } else {
+//   header("Location: listingAnimals.php");
+// }
 
-$a = new Animal();
-$animalData = $a->getById($animalId);
+// $a = new Animal();
+// $animalData = $a->getById($animalId);
 
-$c = new Customer();
-$customerData = $c->getById($animalData->customer_id);
-$customers = $c->getNames();
+// $c = new Customer();
+// $customerData = $c->getById($animalData->customer_id);
+// $customers = $c->getNames();
 
-if (isset($_POST['Confirmation'])) {
-  $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"]);
-}
+// if (isset($_POST['Confirmation'])) {
+//   $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"]);
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
