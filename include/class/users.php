@@ -57,14 +57,14 @@ class User {
         $stmt->bind_param("s", $mail);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+        
         if ($result->num_rows === 1) {
             $userData = $result->fetch_assoc();
-    
+
             if (password_verify($password, $userData['password'])) {
                 session_start();
                 $_SESSION['is_logged_in'] = true;
-    
+                
                 // Récupérer le nom et prénom de l'utilisateur qui vient de se connecter :
                 $this->GetName($mail);
                 header("Location: index.php"); // Redirect to the index.php page
@@ -82,7 +82,6 @@ class User {
     
         $stmt->close();
     }
-    
 
     public function GetName($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT CONCAT(firstname,' ',lastname) as FullName, is_admin FROM users WHERE mail = ?");

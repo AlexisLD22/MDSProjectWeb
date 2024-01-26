@@ -93,11 +93,11 @@ INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) 
 ("Zephyr", "Bulldog", 1, 56, 120, "/", "4");
 
 INSERT INTO users (is_admin ,firstname, lastname, telephone, mail, postal_adress, password) VALUES
-(1, "Pierre", "Dupont", "0123456789", "pierre.dupont@example.com", "123 Rue de la Liberté", "P@ssw0rd1"),
-(0, "Sophie", "Martin", "0612345678", "sophie.martin@email.fr", "45 Rue de la Paix", "Secure123!"),
-(0, "Jean", "Dubois", "0456789012", "jean.dubois@email.fr", "789 Avenue des Champs-Élysées", "Pass1234"),
-(0, "Marie", "Leclerc", "0345678001", "marie.leclerc@example.com", "567 Rue de la République", "SecretPwd"),
-(0, "Olivier", "Laurent", "0234567890", "olivier.laurent@email.fr", "234 Boulevard Saint-Germain", "MyP@ssw0rd");
+(1, "Pierre", "Dupont", "0123456789", "pierre.dupont@example.com", "123 Rue de la Liberté", "$2y$10$Y7guo3IVeoO2IQOlbsn8C.YdIDMWpgyQiSoZ5y2v.GiotDcnv5e6S"),
+(0, "Sophie", "Martin", "0612345678", "sophie.martin@email.fr", "45 Rue de la Paix", "$2y$10$AmMR1jQQN.qWWU3Ms.XuJO8L97uSPSkwstaHBxbTtGwb1JjkaZd32"),
+(0, "Jean", "Dubois", "0456789012", "jean.dubois@email.fr", "789 Avenue des Champs-Élysées", "$2y$10$GXrGC74LPZ.F9bLaw/H/c.yMC2NYco2nd6NOOYd7ghSODVTE8c/jq"),
+(0, "Marie", "Leclerc", "0345678001", "marie.leclerc@example.com", "567 Rue de la République", "$2y$10$PQcp0exreyp.x38a959Koe0g.bV/iZfdj5mDTw3.NezJdHwMMfQPq"),
+(0, "Olivier", "Laurent", "0234567890", "olivier.laurent@email.fr", "234 Boulevard Saint-Germain", "$2y$10$P5ZwfX0mheaVAUA/.7sa3e1ngJEpT.8N1d5i5v0.Lx.CHsyzhWieS");
 
 INSERT INTO services (name, price) VALUES
 ("toilettage", 20),
@@ -119,4 +119,13 @@ INSERT INTO appointments (date_start, date_end, is_paid, user_id, animal_id, ser
 ('2024-01-15 14:00:00', '2024-01-15 15:00:00', 0, 4, 3, 1),
 ('2024-02-17 10:00:00', '2024-02-17 11:30:00', 1, 2, 1, 2),
 ('2024-03-21 15:00:00', '2024-03-21 16:00:00', 1, 5, 4, 4);
+```
+
+# Pwd for every users :
+```
+"Pierre"-> P@ssw0rd1"
+"Sophie"-> "Secure123!"
+"Jean"-> "Pass1234"
+"Marie"-> "SecretPwd"
+"Olivier"-> MyP@ssw0rd"
 ```
