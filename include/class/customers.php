@@ -163,5 +163,17 @@ class Customer {
         $stmtAnimal->execute();
         $stmtCustomer->execute();
     }
+
+    public function update($id, $firstname, $lastname, $mail, $telephone, $postal_adress, $commentary) {
+        $_SESSION["error_message_customerEdit"] = NULL;
+
+        if (strlen($postal_adress) > 0 && strlen($firstname) > 0 && strlen($lastname) > 0 && strlen($mail) > 0  && strlen($postal_adress) <= 45 && strlen($firstname) <= 45 && strlen($lastname) <= 45 && strlen($telephone) === 10) {
+            $stmt = $this->connexion->conn->prepare("UPDATE customers SET firstname = ?, lastname = ?, mail = ?, telephone = ?, postal_adress = ?, commentary = ? WHERE id = ?;");
+            $stmt->bind_param("sssssss", $firstname, $lastname, $mail, $telephone, $postal_adress, $commentary, $id);
+            $stmt->execute();
+        } else {
+            $_SESSION["error_message_customerEdit"] = "Les données sont invalides.";
+        }
+    }
 }
 ?>

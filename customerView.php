@@ -13,7 +13,6 @@ if(isset($_GET['id'])) {
 $c = new Customer();
 $customerData = $c->getById($customerId);
 
-
 $a = new Animal();
 $animals = $a->getAnimalsByCustomerId($customerData->id);
 

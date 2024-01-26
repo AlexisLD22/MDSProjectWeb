@@ -1,32 +1,27 @@
 <?php
-// A FAIRE
-// require_once 'include/session.php';
-// require_once 'include/class/animals.php';
-// require_once 'include/class/customers.php';
+require_once 'include/session.php';
+require_once 'include/class/customers.php';
 
-// if(isset($_GET['id'])) {
-//   $animalId = $_GET['id'];
-// } else {
-//   header("Location: listingAnimals.php");
-// }
+if(isset($_GET['id'])) {
+  $customerId = $_GET['id'];
+} else {
+  header("Location: listingCustomers.php");
+}
 
-// $a = new Animal();
-// $animalData = $a->getById($animalId);
+$c = new Customer();
+$customerData = $c->getById($customerId);
 
-// $c = new Customer();
-// $customerData = $c->getById($animalData->customer_id);
-// $customers = $c->getNames();
+if (isset($_POST['Confirmation'])) {
+  $c->update($_POST["customer_id"], $_POST["firstname"], $_POST["lastname"], $_POST["mail"], $_POST["telephone"], $_POST["postal_adress"], $_POST["commentary"]);
+}
 
-// if (isset($_POST['Confirmation'])) {
-//   $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"]);
-// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Animal Profile</title>
+  <title>AdminLTE 3 | Customer Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -57,7 +52,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Animal Profile</li>
+              <li class="breadcrumb-item active">Customer Profile</li>
             </ol>
           </div>
         </div>
@@ -79,7 +74,7 @@
                       <div class="user-block">
                         <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
                         <span class="username">
-                          <a href="#"><?= $animalData->name?></a>
+                          <a href="#"><?= $customerData->firstname.' '.$customerData->lastname?></a>
                         </span>
                       </div>
                       <div class="card-header">
@@ -92,57 +87,36 @@
                       <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                         <div class="card-body">
                           <dl class="row">
-                            <input type="hidden" name="animal_id" value="<?= $animalData->id?>">
+                            <input type="hidden" name="customer_id" value="<?= $customerData->id?>">
                             
-                            <dt class="col-sm-4">Nom de l'animal</dt>
+                            <dt class="col-sm-4">Prénom du client</dt>
                             <dd class="col-sm-8">
-                              <input type="text" name="name" class="col-sm-8" value="<?= $animalData->name?>">
+                              <input type="text" name="firstname" class="col-sm-8" value="<?= $customerData->firstname?>">
                             </dd>
                             
-                            <dt class="col-sm-4">Race de l'animal</dt>
+                            <dt class="col-sm-4">Nom du client</dt>
                             <dd class="col-sm-8">
-                              <input type="text" name="breed" class="col-sm-8" value="<?= $animalData->breed?>">
-                            </dd>
-
-                            <dt class="col-sm-4">Nom du proriétaire</dt>
-                            <dd class="col-sm-8">
-                              <select class="form-control" name="customer" id="customerDropdown">
-                                <?php
-                                foreach ($customers as $customersName) {
-                                  $selected = ($customersName == $customerData->firstname.' '.$customerData->lastname) ? 'selected' : '';
-                                  echo '<option value="' . $customersName . '" ' . $selected . '>' . $customersName . '</option>';
-                                }
-                                ?>
-                              </select>
-                            </dd>
-
-                            <dt class="col-sm-4">Nom du proriétaire</dt>
-                            <dd class="col-sm-8"><?= $customerData->firstname.' '.$customerData->lastname?></dd>
-                            
-                            <dt class="col-sm-4">Téléphone du proriétaire</dt>
-                            <dd class="col-sm-8"><?= $customerData->telephone?></dd>
-                            
-                            <dt class="col-sm-4">Adresse mail du propriétaire</dt>
-                            <dd class="col-sm-8"><?= $customerData->mail?></dd>
-                            
-                            <dt class="col-sm-4">Taille</dt>
-                            <dd class="col-sm-8">
-                              <input type="number" name="height" class="col-sm-8" value="<?= $animalData->height?>">
+                              <input type="text" name="lastname" class="col-sm-8" value="<?= $customerData->lastname?>">
                             </dd>
                             
-                            <dt class="col-sm-4">Poids</dt>
+                            <dt class="col-sm-4">E-mail</dt>
                             <dd class="col-sm-8">
-                              <input type="number" name="weight" class="col-sm-8" value="<?= $animalData->weight?>">
+                              <input type="text" name="mail" class="col-sm-8" value="<?= $customerData->mail?>">
                             </dd>
                             
-                            <dt class="col-sm-4">Age</dt>
+                            <dt class="col-sm-4">Téléphone</dt>
                             <dd class="col-sm-8">
-                              <input type="number" name="age" class="col-sm-8" value="<?= $animalData->age?>">
+                              <input type="number" name="telephone" class="col-sm-8" value="<?= $customerData->telephone?>">
                             </dd>
                             
+                            <dt class="col-sm-4">Adresse postale</dt>
+                            <dd class="col-sm-8">
+                              <input type="text" name="postal_adress" class="col-sm-8" value="<?= $customerData->postal_adress?>">
+                            </dd>
+                                                        
                             <dt class="col-sm-4">Commentaire</dt>
                             <dd class="col-sm-8">
-                              <input type="textarea" name="commentary" class="col-sm-8" value="<?= $animalData->commentary?>">
+                              <input type="textarea" name="commentary" class="col-sm-8" value="<?= $customerData->commentary?>">
                             </dd>
                           </dl>
                         </div>
