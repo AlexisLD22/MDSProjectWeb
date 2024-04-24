@@ -82,7 +82,7 @@ $Number_Listing = $c->getCount();
               <div class="inner">
                 <h3><?= random_int(10, 75);?></h3>
 
-                <p>Ajouter un nouveau client :</p>
+                <p>Profits réalisé :</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -163,8 +163,6 @@ $Number_Listing = $c->getCount();
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard.js"></script>
 </body>

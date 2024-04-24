@@ -192,8 +192,7 @@ $calendar = $a_c->getCalendar();
 <!-- fullCalendar 2.2.5 -->
 <script src="plugins/moment/moment.min.js"></script>
 <script src="plugins/fullcalendar/main.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
+
 <!-- Include the Select2 JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 

@@ -42,7 +42,7 @@ $Weight = $a->getWeightData();
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">ChartJS</li>
+              <li class="breadcrumb-item active">Statistiques</li>
             </ol>
           </div>
         </div>
@@ -130,7 +130,7 @@ $Weight = $a->getWeightData();
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="plugins/chart.js/Chart.min.js"></script>
 <script src="dist/js/adminlte.min.js"></script>
-<script src="dist/js/demo.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!--------------------------------------------------------------------------------------------------->
 <!-------------------------------------- SCRIPT DIAGRAMME RACE -------------------------------------->

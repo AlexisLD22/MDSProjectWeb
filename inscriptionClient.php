@@ -148,13 +148,12 @@ if (isset($_POST['CO'])) {
 <!-- Bootstrap 4 -->
 <!-- bs-custom-file-input -->
 <!-- AdminLTE App -->
-<!-- AdminLTE for demo purposes -->
 <!-- Page specific script -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script src="dist/js/adminlte.min.js"></script>
-<script src="dist/js/demo.js"></script>
+
 <script>
 $(function () {
   bsCustomFileInput.init();
