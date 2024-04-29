@@ -9,14 +9,13 @@ $Number_Stats = $a->getAvgWeight();
 
 $c = new Customer();
 $Number_Listing = $c->getCount();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>ToilettageCanin | Dashboard</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -87,7 +86,7 @@ $Number_Listing = $c->getCount();
               <div class="icon">
                 <i class="ion ion-bag"></i>
               </div>
-              <a href="#" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="calendar.php" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -102,7 +101,7 @@ $Number_Listing = $c->getCount();
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="listingCustomers.php" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="inscriptionClient.php" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

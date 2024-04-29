@@ -49,7 +49,6 @@ class Customer {
         return $customers;
     }
     
-    
     public function getByMail($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE mail = ? ");
         $stmt->bind_param("s", $mail);
@@ -80,7 +79,6 @@ class Customer {
         return $countData['count'];
     }
     
-
     public function Exist($mail) {
         $stmt = $this->connexion->conn->prepare("SELECT * FROM customers WHERE mail = ?");
         $stmt->bind_param("s", $mail);
@@ -92,14 +90,21 @@ class Customer {
     
     public function AddCustomer($firstname, $lastname, $mail, $telephone, $postal_adress, $commentary) {
         if ($this->Exist($mail) === false) {
-            if (strlen($postal_adress) > 0 && strlen($firstname) > 0 && strlen($lastname) > 0 && strlen($mail) > 0  && strlen($postal_adress) <= 45 && strlen($firstname) <= 45 && strlen($lastname) <= 45 && strlen($telephone) === 10) {
+            if (
+            strlen($firstname) > 0 && strlen($firstname) <= 45 &&
+            strlen($lastname) > 0 && strlen($lastname) <= 45 &&
+            strlen($mail) > 0 && strlen($mail) <= 45 &&
+            strlen($telephone) === 10 &&
+            strlen($postal_adress) >= 0 && strlen($postal_adress) <= 100 &&
+            strlen($commentary) >= 0 && strlen($commentary) <= 255
+            ){
                 $stmt = $this->connexion->conn->prepare("INSERT INTO customers (firstname, lastname, mail, telephone, postal_adress, commentary) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("ssssss", $firstname, $lastname, $mail, $telephone, $postal_adress, $commentary);
                 $stmt->execute();
                 $stmt->close();
                 $_SESSION["error_message_InscriptionCustomer"] = NULL;
             } else {
-                $_SESSION["error_message_InscriptionCustomer"] = "Invalid input data.";
+                $_SESSION["error_message_InscriptionCustomer"] = "Données d'entrée non-valide. <br>(le prénom, nom et l'adresse mail doivent faire entre 0 et 45 caractères. le téléphone doit fait exactement 10 caractères.)";
             }
         } else {
             $_SESSION["error_message_InscriptionCustomer"] = "Le client existe déjà.";

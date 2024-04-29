@@ -23,7 +23,7 @@ $an = new Appointment();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Customer Profile</title>
+  <title>ToilettageCanin | Customer Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -68,7 +68,7 @@ $an = new Appointment();
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <i class="fas fa-child fa-6x"></i>
                 </div>
                 <h3 class="profile-username text-center"><?= $customerData->firstname . ' ' . $customerData->lastname?></h3>
                 <ul class="list-group list-group-unbordered mb-3">
@@ -113,10 +113,8 @@ $an = new Appointment();
                     <div class="post">
                       <form method="post" action="<?= 'CustomerEdit.php?id=' . $customerData->id?>">
                         <div class="user-block">
-                          <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                          <span class="username">
-                            <a href="#"><?= $customerData->firstname . ' ' . $customerData->lastname?></a>
-                          </span>
+                          <i class="fas fa-child fa-2x"></i>
+                          <?= $customerData->firstname . ' ' . $customerData->lastname?>
                         </div>
                         <div class="card-header">
                           <h3 class="card-title">

@@ -18,7 +18,15 @@ $customers = $c->getNames();
 
 if (isset($_POST["Appointment"])) {
   $a = new Appointment();
-  $a->AddAppointment($_POST["InputCustomer"], $_POST["InputName"], $_POST["InputService"], $_POST["InputUser"], $_POST["InputDate1"], $_POST["InputDate2"], strlen($_POST["InputPaid"]));
+  $a->AddAppointment(
+    $_POST["InputCustomer"],
+    $_POST["InputName"],
+    $_POST["InputService"],
+    $_POST["InputUser"],
+    $_POST["InputDate1"],
+    $_POST["InputDate2"],
+    strlen($_POST["InputPaid"])
+  );
 }
 
 // a_c pour Appointment_Calendar
@@ -30,7 +38,7 @@ $calendar = $a_c->getCalendar();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Calendar</title>
+  <title>ToilettageCanin | Calendar</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -58,12 +66,12 @@ $calendar = $a_c->getCalendar();
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Calendar</h1>
+            <h1>Calendrier</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Calendar</li>
+              <li class="breadcrumb-item active">Calendrier</li>
             </ol>
           </div>
         </div>

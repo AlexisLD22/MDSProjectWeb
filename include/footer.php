@@ -2,7 +2,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 1.2.0
     </div>
-    <strong>Copyright &copy; 2023-2024 <a href="https://adminlte.io">Toiletage Canin</a>.</strong> Tout droit réservés.
+    <strong>Copyright &copy; 2023-2024 <a href="index.php">Toiletage Canin</a>.</strong> Tout droit réservés.
 </footer>
 
 <!-- Control Sidebar -->

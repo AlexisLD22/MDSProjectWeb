@@ -2,15 +2,13 @@
 
 Premier projet dev web du BTS SIO, fait en php natif nous avions pour mission de faire un site interne à une entreprise ficitve pour la gestion de clients, de rendez-vous, d'animaux et de services 
 
-
-
 ![texte_alternatif](https://img.shields.io/badge/PHP_Natif-6b5b95 "Natif PHP")
 ![texte_alternatif](https://img.shields.io/badge/HTML-a2b9bc "HTML")
 ![texte_alternatif](https://img.shields.io/badge/CSS-f7c7cb "CSS")
 
 ![Image calendrier](https://github.com/AlexisLD22/MDSProjectWeb/blob/main/Documentation/calendar.png)
 
-## prérequis
+## Prérequis
 
 Nécéssite un environnement de développement (MAMP, WAMP, XAMPP). Je conseille d'utiliser XAMPP avec comme modules : Apache & MySQL.\
 Ne pas oublier d'avoir la bonne version de PHP (8.O.2)

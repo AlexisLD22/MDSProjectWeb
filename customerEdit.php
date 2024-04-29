@@ -12,7 +12,15 @@ $c = new Customer();
 $customerData = $c->getById($customerId);
 
 if (isset($_POST['Confirmation'])) {
-  $c->update($_POST["customer_id"], $_POST["firstname"], $_POST["lastname"], $_POST["mail"], $_POST["telephone"], $_POST["postal_adress"], $_POST["commentary"]);
+  $c->update(
+    $_POST["customer_id"],
+    $_POST["firstname"],
+    $_POST["lastname"],
+    $_POST["mail"],
+    $_POST["telephone"],
+    $_POST["postal_adress"],
+    $_POST["commentary"]
+  );
 }
 
 ?>
@@ -21,7 +29,7 @@ if (isset($_POST['Confirmation'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Customer Profile</title>
+  <title>ToilettageCanin | Customer Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -72,10 +80,8 @@ if (isset($_POST['Confirmation'])) {
                     <!-- Post -->
                     <div class="post">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                        <span class="username">
-                          <a href="#"><?= $customerData->firstname.' '.$customerData->lastname?></a>
-                        </span>
+                        <i class="fas fa-child fa-2x"></i>
+                        <?= $customerData->firstname . ' ' . $customerData->lastname?>
                       </div>
                       <div class="card-header">
                         <h3 class="card-title">

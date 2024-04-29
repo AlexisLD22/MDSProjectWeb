@@ -17,7 +17,16 @@ $customerData = $c->getById($animalData->customer_id);
 $customers = $c->getNames();
 
 if (isset($_POST['Confirmation'])) {
-  $a->update($_POST["animal_id"], $_POST["name"], $_POST["breed"], $_POST["customer"], $_POST["height"], $_POST["weight"], $_POST["age"], $_POST["commentary"]);
+  $a->update(
+    $_POST["animal_id"],
+    $_POST["name"],
+    $_POST["breed"],
+    $_POST["customer"],
+    $_POST["height"],
+    $_POST["weight"],
+    $_POST["age"],
+    $_POST["commentary"]
+  );
 }
 ?>
 <!DOCTYPE html>
@@ -25,7 +34,7 @@ if (isset($_POST['Confirmation'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Animal Profile</title>
+  <title>ToilettageCanin | Animal Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -76,10 +85,8 @@ if (isset($_POST['Confirmation'])) {
                     <!-- Post -->
                     <div class="post">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                        <span class="username">
-                          <a href="#"><?= $animalData->name?></a>
-                        </span>
+                        <i class="fas fa-paw fa-2x"></i>
+                        <?= $animalData->name?>
                       </div>
                       <div class="card-header">
                         <h3 class="card-title">

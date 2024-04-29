@@ -8,7 +8,15 @@ $customers = $c->getNames();
 
 if (isset($_POST['AO'])) {
   $a = new Animal();
-  $a->AddAnimal($_POST["inputName"], $_POST["inputBreed"], $_POST["InputHeight"], $_POST["InputWeight"], $_POST["InputAge"], $_POST["InputCustomer"], $_POST["inputCommentary"]);
+  $a->AddAnimal(
+    $_POST["inputName"],
+    $_POST["inputBreed"],
+    $_POST["InputHeight"],
+    $_POST["InputWeight"],
+    $_POST["InputAge"],
+    $_POST["InputCustomer"],
+    $_POST["inputCommentary"]
+  );
 }
 ?>
 <!DOCTYPE html>
@@ -16,7 +24,7 @@ if (isset($_POST['AO'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ToilettageCanin | Inscriptions Animaux</title>
+  <title>ToilettageCanin | Animal Inscription</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -68,7 +76,7 @@ if (isset($_POST['AO'])) {
                   <div class="form-group row">
                     <label for="inputName" class="col-sm-2 col-form-label">Nom de l'animal</label>
                     <div class="input-group mb-3 col-sm-10">
-                      <input type="Name" class="form-control" name="inputName" placeholder="Nom de l'animal">
+                      <input type="Name" required class="form-control" name="inputName" placeholder="Nom de l'animal">
                       <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-font"></i></span>
                       </div>
@@ -78,7 +86,7 @@ if (isset($_POST['AO'])) {
                   <div class="form-group row">
                     <label for="inputBreed" class="col-sm-2 col-form-label">Race de l'animal</label>
                     <div class="input-group mb-3 col-sm-10">
-                      <input type="text" class="form-control" name="inputBreed" placeholder="Race de l'animal">
+                      <input type="text" required class="form-control" name="inputBreed" placeholder="Race de l'animal">
                       <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-paw"></i></span>
                       </div>

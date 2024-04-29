@@ -157,7 +157,14 @@ class Animal {
             $c = new Customer();
             $Customer = $c->getByName($customer);
             $CustomerId = $Customer->id;
-            if (strlen($name) > 0 && strlen($breed) > 0 && strlen($name) <= 45 && strlen($breed) <= 45 && strlen($age) > 0 && strlen($age) <= 3 && strlen($weight) > 0 && strlen($height) > 0 && strlen($weight) <= 3 && strlen($height) <= 3) {
+            if (
+            strlen($name) > 0 && strlen($name) <= 45 &&
+            strlen($breed) > 0 && strlen($breed) <= 45 &&
+            strlen($height) > 0 && strlen($height) <= 3 &&
+            strlen($weight) > 0 && strlen($weight) <= 3 &&
+            strlen($age) > 0 && strlen($age) <= 3 &&
+            strlen($commentary) <= 255
+                ) {
                 $stmt = $this->connexion->conn->prepare("INSERT INTO animals (name, breed, age, weight, height, commentary, customer_id) VALUES (?, ?, ?, ?, ?, ?, ?);");
                 $stmt->bind_param("sssssss", $name, $breed, $age, $weight, $height, $commentary, $CustomerId);
                 $stmt->execute();

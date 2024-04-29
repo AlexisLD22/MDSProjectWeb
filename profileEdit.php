@@ -15,13 +15,10 @@ $s = new Service();
 $services = $s->getServices();
 
 if ($info == "Update") {
-  
   $u = new User();
   $userData = $u->getById($userId);
   $userAbilities = $u->getCapabilityById($userId);
-  
   if (isset($_POST['Confirmation'])) {
-
     $capabilities = [
       "c1" => isset($_POST["Capability1"]) == 1 ? 1 : 0,
       "c2" => isset($_POST["Capability2"]) == 1 ? 1 : 0,
@@ -29,15 +26,22 @@ if ($info == "Update") {
       "c4" => isset($_POST["Capability4"]) == 1 ? 1 : 0
     ];
     $is_admin = isset($_POST["is_admin"]) == 1 ? 1 : 0;
-    $u->update(strval($userData->id), strval($is_admin), $_POST["firstname"], $_POST["lastname"], $capabilities, $_POST["telephone"], $_POST["mail"], $_POST["postal_adress"]);
+    $u->update(
+      strval($userData->id),
+      strval($is_admin),
+      $_POST["firstname"],
+      $_POST["lastname"],
+      $capabilities,
+      $_POST["telephone"],
+      $_POST["mail"],
+      $_POST["postal_adress"]
+    );
     header("Location: admin.php");
   }
 } elseif ($info == "Creation") {
-
   $u = new User();
   $userData = $u->getById($userId);
   $userAbilities = $u->getCapabilityById($userId);
-
   if (isset($_POST['Confirmation'])) {
     $capabilities = [
       "c1" => isset($_POST["Capability1"]) == 1 ? 1 : 0,
@@ -46,7 +50,15 @@ if ($info == "Update") {
       "c4" => isset($_POST["Capability4"]) == 1 ? 1 : 0
     ];
     $is_admin = isset($_POST["is_admin"]) == 1 ? 1 : 0;
-    $u->createUser(strval($is_admin), $_POST["firstname"], $_POST["lastname"], $capabilities, $_POST["telephone"], $_POST["mail"], $_POST["postal_adress"], $_POST["password"]);
+    $u->createUser(
+      strval($is_admin),
+      $_POST["firstname"],
+      $_POST["lastname"],
+      $capabilities,
+      $_POST["telephone"],
+      $_POST["mail"],
+      $_POST["postal_adress"],
+      $_POST["password"]);
     header("Location: admin.php");
   }
 } else {
@@ -58,7 +70,7 @@ if ($info == "Update") {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | User Profile</title>
+    <title>ToilettageCanin | User Profile</title>
     
     <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

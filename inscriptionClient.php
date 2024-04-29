@@ -4,7 +4,14 @@ require_once 'include/class/customers.php';
 
 if (isset($_POST['CO'])) {
   $c = new Customer();
-  $c->AddCustomer($_POST["InputFirstName"], $_POST["InputLastName"], $_POST["InputEmail"], $_POST["InputPhone"], $_POST["InputAdress"], $_POST["InputCommentary"]);
+  $c->AddCustomer(
+    $_POST["InputFirstName"],
+    $_POST["InputLastName"],
+    $_POST["InputEmail"],
+    $_POST["InputPhone"],
+    $_POST["InputAdress"],
+    $_POST["InputCommentary"]
+  );
 }
 ?>
 <!DOCTYPE html>
@@ -12,7 +19,7 @@ if (isset($_POST['CO'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ToilettageCanin | Inscriptions Client</title>
+  <title>ToilettageCanin | Client Inscription</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -67,7 +74,7 @@ if (isset($_POST['CO'])) {
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-font"></i></span>
                       </div>
-                      <input type="text" class="form-control" name="InputFirstName" placeholder="Prénom">
+                      <input type="text" required class="form-control" name="InputFirstName" placeholder="Prénom">
                     </div>
                   </div>
                   
@@ -77,7 +84,7 @@ if (isset($_POST['CO'])) {
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-font"></i></span>
                       </div>
-                      <input type="text" class="form-control" name="InputLastName" placeholder="Nom de famille">
+                      <input type="text" required class="form-control" name="InputLastName" placeholder="Nom de famille">
                     </div>
                   </div>
                   
@@ -87,7 +94,7 @@ if (isset($_POST['CO'])) {
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                       </div>
-                      <input type="email" class="form-control" name="InputEmail" placeholder="Adresse mail">
+                      <input type="email" required class="form-control" name="InputEmail" placeholder="Adresse mail">
                     </div>
                   </div>
                   

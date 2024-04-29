@@ -29,7 +29,15 @@ $customerData = $c->getById($animalData->customer_id);
 
 if(isset($_POST["Confirmation"])) {
   $is_paid = isset($_POST["Inputis_paid"]) == 1 ? 1 : 0;
-  $a->ChangeAppointment(strval($appointmentData->id), $_POST["InputService"], $_POST["InputUser"], $_POST["InputDate1"], $_POST["InputDate2"], strval($is_paid), strval($userData->id));
+  $a->ChangeAppointment(
+    strval($appointmentData->id),
+    $_POST["InputService"],
+    $_POST["InputUser"],
+    $_POST["InputDate1"],
+    $_POST["InputDate2"],
+    strval($is_paid),
+    strval($userData->id)
+  );
   header("Location: calendar.php");
 }
 ?>
@@ -38,7 +46,7 @@ if(isset($_POST["Confirmation"])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | User Profile</title>
+  <title>ToilettageCanin | User Profile</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
