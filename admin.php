@@ -42,7 +42,7 @@ if (isset($_POST["Delete"])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Projects</h1>
+            <h1>Administation</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">

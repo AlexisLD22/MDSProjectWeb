@@ -147,7 +147,7 @@ $calendar = $a_c->getCalendar();
                     </div>
 
                     <div class="form-group row">
-                      <label for="InputPaid">Etat du payement :</label>
+                      <label for="InputPaid">Etat du paiement :</label>
                       <input type="checkbox" name="InputPaid" value="1">
                     </div>
 
