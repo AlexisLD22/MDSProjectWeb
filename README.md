@@ -26,11 +26,11 @@ git clone https://github.com/AlexisLD22/MDSProjectWeb.git
 Félicitations vous pouvez maintenant utiliser cet outil pour gérer un entreprise de ToilettageCanin
 # Identifiants :
 ```
-"Pierre"-> P@ssw0rd1"
-"Sophie"-> "Secure123!"
-"Jean"-> "Pass1234"
-"Marie"-> "SecretPwd"
-"Olivier"-> MyP@ssw0rd"
+"pierre.dupont@example.com"-> P@ssw0rd1"
+"sophie.martin@email.fr"-> "Secure123!"
+"jean.dubois@email.fr"-> "Pass1234"
+"marie.leclerc@example.com"-> "SecretPwd"
+"olivier.laurent@email.fr"-> MyP@ssw0rd"
 ```
 ## Utilisation
 
