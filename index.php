@@ -10,6 +10,7 @@ $Number_Stats = $a->getAvgWeight();
 $c = new Customer();
 $Number_Listing = $c->getCount();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +51,7 @@ $Number_Listing = $c->getCount();
   <?php require_once 'include/navigation.php';?>
   <!-- Importation du fichier aside.php -->
   <?php require_once 'include/aside.php';?>
-
+  
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -62,7 +63,7 @@ $Number_Listing = $c->getCount();
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item"><a href="index.php">Accueil</a></li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->

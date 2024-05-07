@@ -59,12 +59,12 @@ $currentDateFormated = sprintf(
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Profile</h1>
+            <h1>Animal View</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Animal Profile</li>
+              <li class="breadcrumb-item"><a href="listingAnimals.php">Liste Animaux</a></li>
+              <li class="breadcrumb-item active">Animal View</li>
             </ol>
           </div>
         </div>
@@ -121,14 +121,10 @@ $currentDateFormated = sprintf(
                     <!-- Post -->
                     <div class="post">
                       <form method="post" action="<?= 'AnimalEdit.php?id=' . $animalData->id?>">
-                        <div class="user-block">
-                          <i class="fas fa-paw fa-2x"></i>
-                          <?= $animalData->name?>
-                        </div>
                         <div class="card-header">
                           <h3 class="card-title">
-                            <i class="fas fa-text-width"></i>
-                            Fiche d'informations
+                            <i class="fas fa-paw fa-2x"></i>
+                            Fiche d'informations de <?= $animalData->name?>
                           </h3>
                         </div>
                         <!-- /.card-header -->

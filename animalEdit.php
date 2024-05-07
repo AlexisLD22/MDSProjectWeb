@@ -60,12 +60,12 @@ if (isset($_POST['Confirmation'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Profile</h1>
+            <h1>Animal Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Animal Profile</li>
+              <li class="breadcrumb-item"><a href="listingAnimals.php">Liste Animaux</a></li>
+              <li class="breadcrumb-item active">Animal Edit</li>
             </ol>
           </div>
         </div>
@@ -84,14 +84,10 @@ if (isset($_POST['Confirmation'])) {
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <div class="user-block">
-                        <i class="fas fa-paw fa-2x"></i>
-                        <?= $animalData->name?>
-                      </div>
                       <div class="card-header">
                         <h3 class="card-title">
-                          <i class="fas fa-text-width"></i>
-                          Fiche d'informations
+                          <i class="fas fa-paw fa-2x"></i>
+                          Fiche d'informations de <?= $animalData->name?>
                         </h3>
                       </div>
                       <!-- /.card-header -->
@@ -122,9 +118,6 @@ if (isset($_POST['Confirmation'])) {
                               </select>
                             </dd>
 
-                            <dt class="col-sm-4">Nom du proriétaire</dt>
-                            <dd class="col-sm-8"><?= $customerData->firstname.' '.$customerData->lastname?></dd>
-                            
                             <dt class="col-sm-4">Téléphone du proriétaire</dt>
                             <dd class="col-sm-8"><?= $customerData->telephone?></dd>
                             

@@ -60,12 +60,12 @@ $currentDateFormated = sprintf(
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Profile</h1>
+            <h1>Profil Utilisateur</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">User Profile</li>
+              <li class="breadcrumb-item"><a href="admin.php">Accueil</a></li>
+              <li class="breadcrumb-item active">Profil Utilisateur</li>
             </ol>
           </div>
         </div>
@@ -81,7 +81,7 @@ $currentDateFormated = sprintf(
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <i class="fas fa-user-secret fa-6x"></i>
                 </div>
                 <h3 class="profile-username text-center"><?= $userData->firstname . ' ' . $userData->lastname?></h3>
                 <ul class="list-group list-group-unbordered mb-3">
@@ -122,16 +122,10 @@ $currentDateFormated = sprintf(
                     <!-- Post -->
                     <div class="post">
                       <form method="post" action="<?= 'profileEdit.php?id=' . $userData->id?>">
-                        <div class="user-block">
-                          <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                          <span class="username">
-                            <a href="#"><?= $userData->firstname . ' ' . $userData->lastname?></a>
-                          </span>
-                        </div>
                         <div class="card-header">
                           <h3 class="card-title">
-                            <i class="fas fa-text-width"></i>
-                            Fiche de poste
+                            <i class="fas fa-user-secret fa-2x"></i>
+                            Fiche d'utilisateur <?= $userData->firstname . ' ' . $userData->lastname?>
                           </h3>
                         </div>
                         <!-- /.card-header -->

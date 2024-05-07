@@ -1,6 +1,3 @@
-<?php
-
-?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index.php" class="brand-link">
@@ -16,7 +13,7 @@
           <i class="fas fa-user fa-2x" style="color:#d6d7d8;"></i>
         </div>
         <div class="info">
-          <a href="#" class="d-block"><?= $_SESSION['FullName']?></a>
+          <a href="<?= 'profileView.php?id='. $_SESSION['id']?>" class="d-block"><?= $_SESSION['FullName']?></a>
         </div>
       </div>
 

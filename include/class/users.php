@@ -84,13 +84,14 @@ class User {
     }
 
     public function GetName($mail) {
-        $stmt = $this->connexion->conn->prepare("SELECT CONCAT(firstname,' ',lastname) as FullName, is_admin FROM users WHERE mail = ?");
+        $stmt = $this->connexion->conn->prepare("SELECT CONCAT(firstname,' ',lastname) as FullName, is_admin, id FROM users WHERE mail = ?");
         $stmt->bind_param("s", $mail);
         $stmt->execute();
         $names_result = $stmt->get_result();
 
         $UserDetail = $names_result->fetch_assoc();
         $_SESSION["FullName"] = $UserDetail["FullName"];
+        $_SESSION["id"] = $UserDetail["id"];
         $_SESSION["is_admin"] = $UserDetail["is_admin"];
     
         $stmt->close();

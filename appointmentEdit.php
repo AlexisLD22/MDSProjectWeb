@@ -46,7 +46,7 @@ if(isset($_POST["Confirmation"])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ToilettageCanin | User Profile</title>
+  <title>ToilettageCanin | Appointment Edit</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -70,12 +70,12 @@ if(isset($_POST["Confirmation"])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Profile</h1>
+            <h1>Rendez-vous</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">User Profile</li>
+              <li class="breadcrumb-item"><a href="calendar.php">Calendrier</a></li>
+              <li class="breadcrumb-item active">Rendez-vous</li>
             </ol>
           </div>
         </div>
@@ -94,80 +94,73 @@ if(isset($_POST["Confirmation"])) {
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                        <span class="username">
-                          <a href="#"><?= $customerData->firstname . ' ' . $customerData->lastname?></a>
-                          </span>
-                        </div>
-                        <div class="card-header">
-                          <h3 class="card-title">
-                            <i class="fas fa-text-width"></i>
-                            Informations du rendez-vous
-                          </h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <form method="POST" action="<?= 'appointmentEdit.php?id='. $appointmentId?>">
-                          <div class="card-body">
-                            <dl class="row">
-                              <input type="hidden" name="user_id" value="<?= $userData->id?>"> 
-                              
-                              <dt class="col-sm-4">Prénom et nom du propriétaire</dt>
-                              <dd class="col-sm-8"><?= $customerData->firstname . ' ' . $customerData->lastname?></dd>
+                      <div class="card-header">
+                        <h3 class="card-title">
+                          <i class="fas fa-text-width"></i>
+                          Informations du rendez-vous
+                        </h3>
+                      </div>
+                      <!-- /.card-header -->
+                      <form method="POST" action="<?= 'appointmentEdit.php?id='. $appointmentId?>">
+                        <div class="card-body">
+                          <dl class="row">
+                            <input type="hidden" name="user_id" value="<?= $userData->id?>"> 
                             
-                              <dt class="col-sm-4">Nom de l'animal</dt>
-                              <dd class="col-sm-8"><?= $animalData->name?></dd>
-                              
-                              <dt class="col-sm-4">Service</dt>
-                              <dd class="col-sm-8">
-                                <select class="form-control" name="InputService">
-                                    <?php
-                                    foreach ($services as $serviceName) {
-                                      $selected = ($serviceName == $serviceData->name) ? 'selected' : '';
-                                      echo '<option value="' . $serviceName . '" ' . $selected . '>' . $serviceName . '</option>';
-                                    }
-                                    ?>
-                                </select>
-                              </dd>
-                              
-                              <dt class="col-sm-4">Employé</dt>
-                              <dd class="col-sm-8">
-                                <select class="form-control" name="InputUser">
-                                    <?php
-                                    foreach ($users as $userName) {
-                                      $selected = ($userName == $userData->firstname.' '.$userData->lastname) ? 'selected' : '';
-                                      echo '<option value="' . $userName . '" ' . $selected . '>' . $userName . '</option>';
-                                    }
-                                    ?>
-                                </select>
-                              </dd>
-                              
-                              <dt class="col-sm-4">Date du début du rendez-vous</dt>
-                              <dd class="col-sm-8">
-                                <input type="datetime-local" class="form-control" name="InputDate1" value="<?= $appointmentData->date_start?>">
-                              </dd>
-                              
-                              <dt class="col-sm-4">Date de fin du rendez-vous</dt>
-                              <dd class="col-sm-8">
-                                <input type="datetime-local" class="form-control" name="InputDate2" value="<?= $appointmentData->date_end?>">
-                              </dd>
-                              
-                              <dt class="col-sm-4">Etat du payement </dt>
-                              <dd class="col-sm-8">
-                                <?php if ($appointmentData->is_paid): ?>
-                                  <input type='checkbox' name='Inputis_paid' checked>
-                                <?php else: ?>
-                                  <input type='checkbox' name='Inputis_paid'>
-                                <?php endif ?>
-                              </dd>
-                            </dl>
-                          </div>
-                          <button type="submit" name="Confirmation" class="btn btn-primary btn-block"><b>Confirmations des informations</b></button>
-                          <?php if (isset($_SESSION["error_message"])) : ?>
-                            <div class="error-message"><?= $_SESSION["error_message"]; ?></div>
-                          <?php endif; ?>
-                      </form>
-                    </div>
+                            <dt class="col-sm-4">Prénom et nom du propriétaire</dt>
+                            <dd class="col-sm-8"><?= $customerData->firstname . ' ' . $customerData->lastname?></dd>
+                          
+                            <dt class="col-sm-4">Nom de l'animal</dt>
+                            <dd class="col-sm-8"><?= $animalData->name?></dd>
+                            
+                            <dt class="col-sm-4">Service</dt>
+                            <dd class="col-sm-8">
+                              <select class="form-control" name="InputService">
+                                  <?php
+                                  foreach ($services as $serviceName) {
+                                    $selected = ($serviceName == $serviceData->name) ? 'selected' : '';
+                                    echo '<option value="' . $serviceName . '" ' . $selected . '>' . $serviceName . '</option>';
+                                  }
+                                  ?>
+                              </select>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Employé</dt>
+                            <dd class="col-sm-8">
+                              <select class="form-control" name="InputUser">
+                                  <?php
+                                  foreach ($users as $userName) {
+                                    $selected = ($userName == $userData->firstname.' '.$userData->lastname) ? 'selected' : '';
+                                    echo '<option value="' . $userName . '" ' . $selected . '>' . $userName . '</option>';
+                                  }
+                                  ?>
+                              </select>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Date du début du rendez-vous</dt>
+                            <dd class="col-sm-8">
+                              <input type="datetime-local" class="form-control" name="InputDate1" value="<?= $appointmentData->date_start?>">
+                            </dd>
+                            
+                            <dt class="col-sm-4">Date de fin du rendez-vous</dt>
+                            <dd class="col-sm-8">
+                              <input type="datetime-local" class="form-control" name="InputDate2" value="<?= $appointmentData->date_end?>">
+                            </dd>
+                            
+                            <dt class="col-sm-4">Etat du payement </dt>
+                            <dd class="col-sm-8">
+                              <?php if ($appointmentData->is_paid): ?>
+                                <input type='checkbox' name='Inputis_paid' checked>
+                              <?php else: ?>
+                                <input type='checkbox' name='Inputis_paid'>
+                              <?php endif ?>
+                            </dd>
+                          </dl>
+                        </div>
+                        <button type="submit" name="Confirmation" class="btn btn-primary btn-block"><b>Confirmations des informations</b></button>
+                        <?php if (isset($_SESSION["error_message"])) : ?>
+                          <div class="error-message"><?= $_SESSION["error_message"]; ?></div>
+                        <?php endif; ?>
+                    </form>
                   </div>
                 </div>
               </div><!-- /.card-body -->

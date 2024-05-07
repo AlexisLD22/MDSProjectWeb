@@ -94,12 +94,12 @@ if ($info == "Update") {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Profile</h1>
+            <h1>Utilisateur Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">User Profile</li>
+              <li class="breadcrumb-item"><a href="admin.php">Accueil</a></li>
+              <li class="breadcrumb-item active">Utilisateur Edit</li>
             </ol>
           </div>
         </div>
@@ -118,16 +118,10 @@ if ($info == "Update") {
                   <div class="active tab-pane" id="activity">
                     <!-- Post -->
                     <div class="post">
-                      <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                        <span class="username">
-                          <a href="#"><?= $userData->firstname . ' ' . $userData->lastname?></a>
-                        </span>
-                      </div>
                       <div class="card-header">
                         <h3 class="card-title">
-                          <i class="fas fa-text-width"></i>
-                          Fiche de poste
+                          <i class="fas fa-user-secret fa-2x"></i>
+                          Fiche de poste de <?= $userData->firstname . ' ' . $userData->lastname?>
                         </h3>
                       </div>
                       <!-- /.card-header -->
